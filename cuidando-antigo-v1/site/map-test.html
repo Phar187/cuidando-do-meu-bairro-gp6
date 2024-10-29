@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+	<head>
+		<meta charset="utf-8">
+		<title>Cuidando do meu Bairro</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+		<!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
+		<!--[if lt IE 9]>
+		<script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+		<![endif]-->
+		
+		<!--favicon-->
+		<link rel="shortcut icon" href="img/favicon.ico" type="image/x-icon"/>
+		
+		<!--CSS Styles-->
+		<link href="css/table.css" rel="stylesheet">
+		<link href="css/bootstrap.min.css" rel="stylesheet">
+		<link href="css/bootstrap-responsive.min.css" rel="stylesheet">
+		<link href="css/docs.css" rel="stylesheet">
+		<style type="text/css">
+			#map-wrapper {width:100%;height:500px;margin:0 auto;padding-top:0px;}
+			#map-wrapper img {max-width: none;}
+		</style>
+		<!--END OF CSS Styles-->
+		
+		<!--Javascript-->
+	  <!--JQuery-->
+		<script src="http://code.jquery.com/jquery-latest.min.js"></script>
+
+		<!--Year-->
+		<script type="text/javascript">
+			var path = "data/" + "2014" + "/";
+		</script>
+					
+		<!--Bootstrap-->
+		<script src="js/bootstrap.min.js"></script>
+		<script src="js/application.js"></script>
+		
+		<!--Google APIs-->
+		<script src="http://maps.googleapis.com/maps/api/js?sensor=false"></script>
+		<script src="https://www.google.com/jsapi"></script>
+		<script src="js/build-map-visualization.js"></script>
+	</head>
+
+	<body class="preview">
+		<?php include("header.inc.php"); ?>
+
+		<div class="container">
+			<div class="page-header">
+				<h1>Ano: <?php echo $_GET['year']; ?></h1>
+				<div id="button-wrapper" style="margin-top: -45px;  float: right;">
+					<div class="btn-group">
+						<a class="btn btn-primary" data-toggle="dropdown" href="#"><b>Baixar os dados por Órgão (formato Excel)</b></a>
+						<a class="btn btn-primary dropdown-toggle" data-toggle="dropdown" href="#"><span class="caret"></span></a>
+						<ul class="dropdown-menu">
+							<?php
+								$year =  $_GET['year'];
+								$path = "data/" . $year . "/orgaos.json";
+								$json = file_get_contents($path);
+								$data = json_decode($json, TRUE);
+								foreach($data as $orgao => $array) {
+									echo '<li><a target="_blank" href="'. "download-csv.php?year=$year&orgao=$orgao" .'">' . $orgao . "</a></li>\n";
+								}
+							?>
+						</ul>
+					</div>
+				</div>
+			</div>
+			
+			<header class="jumbotron subhead" id="overview">
+			  <div class="subnav">
+			    <ul class="nav nav-pills">
+			      <li><a href="#map">Mapa</a></li>
+			      <li><a href="#label">Legenda</a></li>
+			      <li><a href="#chart">Gráficos</a></li>
+			      <li><a href="#mapped-list">Lista de atividades mapeadas</a></li>
+			      <li><a href="#notmapped-list">Lista de atividades não mapeadas</a></li>
+			    </ul>
+			  </div>
+			</header>
+
+			<section id="map">
+			  <div class="page-header" style>
+			    <h2>Mapa</h2>
+				</div>
+				<div class="well">
+					<div id="map-wrapper"></div>
+				</div>
+			</section>
+
+			<section id="label">
+			  <div class="page-header">
+			    <h2>Legenda</h2>
+			  </div>
+			  <div class="row">
+			    <div style="width:397px; margin:0 auto;">
+			      <table id="label" cellspacing="0">
+							<tr>
+							  <th scope="col" class="nobg"></th>
+							  <th scope="col">Significado</th>
+							</tr>
+							<tr>
+							  <th scope="row" class="spec" style="text-align: center"><img src="img/pin-red.png" width="22" height="32"></img></th>
+				  			<td>A despesa foi apenas <b>orçada</b>.</td>
+							</tr>
+							<tr>
+							  <th scope="row" class="specalt" style="text-align: center"><img src="img/pin-yellow.png" width="22" height="32"></img></th>
+							  <td class="alt">A despesa teve alguma <b>atualização</b> no valor orçado.</td>
+							</tr>
+							<tr>
+							  <th scope="row" class="spec" style="text-align: center"><img src="img/pin-green.png" width="22" height="32"></img></th>
+							  <td>Parte ou todo montante orçado foi <b>empenhado</b>.</td>
+							</tr>
+							<tr>
+							  <th scope="row" class="specalt" style="text-align: center"><img src="img/pin-blue.png" width="22" height="32"></img></th>
+							  <td class="alt">Parte ou todo montante empenhado foi <b>liquidado</b>.</td>
+							</tr>
+							<caption>Legenda das cores dos marcadores utilizados</caption>
+			      </table>
+			    </div>
+			  </div>
+			</section>
+
+			<section id="chart">
+			  <div class="page-header">
+			    <h2>Gráficos</h2>
+			  </div>
+			  <div class="row">
+			    <div id="chart-quantity-wrapper" class="span6"><center><img src="img/loading.gif"></img></center></div>
+			    <div id="chart-values-wrapper" class="span6"><center><img src="img/loading.gif"></img></center></div>
+			  </div>
+			</section>
+
+			<section id="mapped-list">
+  			<div class="page-header">
+			    <h2>Lista de atividades mapeadas</h2>
+			  </div>
+			  <div class="row">
+			    <div id="mapped-list-wrapper"><center><img src="img/loading.gif"></img></center></div>
+			  </div>
+			</section>
+
+			<section id="notmapped-list">
+			  <div class="page-header">
+			    <h2>Lista de atividades não mapeadas</h2>
+			  </div>
+			  <div class="row">
+			    <div id="notmapped-list-wrapper"><center><img src="img/loading.gif"></center></img></div>
+			  </div>
+			</section>
+		</div>
+		<br>
+		<?php include("footer.inc.php"); ?>
+	</body>
+</html>

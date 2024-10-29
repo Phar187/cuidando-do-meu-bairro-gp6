@@ -1,0 +1,7 @@
+Por algum motivo os arquivos no "src" não estão funcionando.
+
+comando = 'wget "http://sempla.prefeitura.sp.gov.br/orcamento/orcamento_%s/basedadosexecucao%s.xls" -O %s.xls' % (ano,)*3
+os.system(comando)
+Para usar esses faça:
+python2 gam.py
+perl main2.pl -y 2013
