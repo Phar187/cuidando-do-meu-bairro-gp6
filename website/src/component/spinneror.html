@@ -1,0 +1,25 @@
+<spinneror>
+
+    <span class="{ transparent: condition() }">
+        <yield/>
+    </span>
+    <spinner if="{ condition() }"
+             scale="{ opts.scale }"/>
+
+
+    <script>
+    this.mixin('base')
+
+    this.condition = () => {
+        if(typeof(opts.condition) === "boolean"){
+          return opts.condition
+        }
+        // a var name started with '!' is negated
+        else if (opts.condition[0] == '!') {
+            return !this.parent[opts.condition.slice(1)]
+        } else {
+            return this.parent[opts.condition]
+        }
+    }
+    </script>
+</spinneror>

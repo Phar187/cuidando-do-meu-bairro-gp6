@@ -1,0 +1,35 @@
+{
+  "private": true,
+  "scripts": {
+    "dev": "webpack-dev-server --progress --colors",
+    "dist": "CONFIG_FILE_ENV=prod webpack -p -d",
+    "viewdist": "light-server -s . -p 5000"
+  },
+  "devDependencies": {
+    "babel-core": "^6.7.2",
+    "babel-eslint": "^6.0.0",
+    "babel-loader": "^6.2.4",
+    "babel-preset-es2015-riot": "^1.0.3",
+    "babel-plugin-syntax-async-functions": "^6.8.0",
+    "babel-plugin-transform-runtime": "^6.9.0",
+    "css-loader": "^0.10.1",
+    "es6-symbol": "^2.0.1",
+    "exports-loader": "^0",
+    "file-loader": "^0.8.4",
+    "imports-loader": "^0.6.4",
+    "jwt-decode": "^1.4.0",
+    "leaflet": "^0.7.5",
+    "leaflet.markercluster": "^0.4.0",
+    "light-server": "^1.0.1",
+    "node-sass": "^3.3.2",
+    "riot": "^2.3.16",
+    "riotjs-loader": "^3.0.0",
+    "url-loader": "^0.5.7",
+    "sass-loader": "^2.0.1",
+    "style-loader": "^0.10.2",
+    "webpack": "^1.8.4",
+    "webpack-dev-server": "^1.8.0",
+    "whatwg-fetch": "^0.9.0",
+    "raw-loader": "^0.5.1"
+  }
+}

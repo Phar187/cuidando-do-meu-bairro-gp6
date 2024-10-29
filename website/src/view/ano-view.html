@@ -1,0 +1,33 @@
+<ano-view class="container">
+    <year-selector year={year}/>
+
+    <div class="text-center">
+        <h2>Quantidade e distribuição de recursos por tipo em { year }</h2>
+        <p>Aqui estão todas as informações sobre os gastos públicos na cidade de São Paulo. Elas são obtidas através do <a href="http://orcamento.prefeitura.sp.gov.br/orcamento/execucao.html" target="_blank">portal de transparência</a>. Nossa equipe buscou por termos para poder realizar a geolocalização dos mesmos, mas nem sempre isso é possível. Nessa página mostramos as estatísticas do que está mapeado e do que não está tanto em termos absolutos (número de atividades) ou relativos à quantidade de recursos. Na tabela abaixo estão relacionados todos os gastos e clicando sobre a linha correspondente você poderá obter mais detalhes e também solicitar as informações que deseja.</p>
+    </div>
+
+    <charts year={year}/>
+    <dyntable/>
+
+    <div class="row">
+        <div class="col-lg-12">
+            <a class="btn btn-color-sec block-center download-table"
+            href="http://devcolab.each.usp.br/dadosorcamentarios"
+            target="_blank">
+                <span class="download-arrow"/>
+                { t("Download table") }
+            </a>
+        </div>
+    </div>
+
+
+    <script>
+    this.mixin('base')
+     /*     this.year = opts.year */
+    this.year = this.router.getParam('year')
+    this.watches('year')
+
+    /* this.openExternal = () => */
+    /* window.open("http://site.gastosabertos.org/static-downloads/execucao/") */
+    </script>
+</ano-view>

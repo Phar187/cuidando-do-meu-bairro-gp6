@@ -1,0 +1,185 @@
+<perguntas>
+    <div class="row">
+        <div class="col-sm-8">
+            <h2>{ t('want_to_question?') }</h2>
+        </div>
+
+        <div class="col-sm-4 new-perg-button">
+            <button onclick={ openNewPerguntaForm }
+                    class="btn btn-color-sec block-right">
+                { t('Make a question') }
+                <span class="right-arrow"/>
+            </button>
+        </div>
+    </div>
+
+    <modal>
+        <new-pergunta-form/>
+    </modal>
+
+    <modal>
+      <new-recurso-form/>
+    </modal>
+
+    <ul class="list-bare">
+        <li class="top-bar"
+            each="{ pedidos.prepedidos }">
+            <p><b>Pergunta enviada:</b> {text}</p>
+        </li>
+    </ul>
+    <ul class="list-bare">
+        <li class="top-bar"
+            each="{ pedidos.pedidos }">
+            <div class="row">
+                <div class="col-xs-1">
+                    <img class="icon block-center" src="{ assets.aPer }">
+                </div>
+                <div class="col-xs-11 col-sm-7">
+                    <div class="full-width {hide-extra: !visible}">
+                        { description }
+                    </div>
+                </div>
+                <div class="col-xs-12 col-sm-4">
+                    <div class="row text-center">
+                        <div class="col-xs-6">
+                                { request_date ? formatDate(request_date) : '' }
+                        </div>
+                        <div class="col-xs-6">
+                            <a onclick={ fRoute('pessoa', {user: author}) }>
+                                { author }
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+              <button onclick={ openNewRecursoForm }
+                      if="{ allow_recurso && this.username == this.author }"
+                      class="btn btn-color-sec block-right margin-bottom">
+                { t('Appeal') }
+                <span class="right-arrow"/>
+              </button>
+
+              <button type="submit"
+                      if="{ !checkSubscribed(notification_id) }"
+                      onclick="{ subscribe }"
+                      class="btn btn-color-sec block-right relative margin-bottom">
+                <spinneror condition="{ waitings[notification_id] && waitings[notification_id]['subscribeWaiting'] }" scale="0.15">{ t("Follow question") }</spinneror>
+              </button>
+              <button type="submit"
+                      if="{ checkSubscribed(notification_id) }"
+                      onclick="{ unsubscribe }"
+                      class="btn btn-color-sec block-right relative margin-bottom">
+                <spinneror condition="{ waitings[notification_id] && waitings[notification_id]['unsubscribeWaiting'] }" scale="0.15">{ t("Unfollow question") }</spinneror>
+              </button>
+
+            <div class="text-right"
+                if="{ !visible }">
+                <a onclick="{ parent.showRespostas.bind(this) }">
+                    { history.length }
+                    { history.length-1 > 1 ? t("respostas") : t("resposta")}
+                    <span class="down-arrow"></span>
+                </a>
+            </div>
+
+            <div if="{ visible }">
+                <p><b>Protocolo:</b> { protocol }</p>
+                <p><b>Órgão:</b> { orgao_name }</p>
+                <div if="{ attachments.length }">
+                    <h3>Anexos</h3>
+                    <ul>
+                        <li each="{ attachments }">
+                            <a href="{ ia_url }" target="_blank">{ name }</a>
+                        </li>
+                    </ul>
+                </div>
+                <h3>Respostas</h3>
+                <ul class="list-bare">
+                    <li each="{ history }">
+                        <div if="{ date }">
+                            <b>{ t('Date') }:</b> { formatDate(date) }
+                        </div>
+                        <div if="{ responsible }">
+                            <b>{ t('Responsible') }:</b> { responsible }
+                        </div>
+                        <div if="{ situation }">
+                            <b>{ t('State') }:</b> { situation }
+                        </div>
+                        <p>{ justification }</p>
+                    </li>
+                </ul>
+                <a onclick="{ parent.hideRespostas.bind(this) }">
+                    { t('hide') }
+                    <span class="up-arrow"></span>
+                </a>
+            </div>
+        </li>
+    </ul>
+
+
+    <script>
+    import {checkIsLogged} from '../../store/auth'
+    import {formatDate} from '../../utils/helpers'
+    this.formatDate = formatDate
+    this.mixin('base')
+    this.watches('username')
+    this.openNewPerguntaForm = (event) => {
+        if (checkIsLogged(event)) {
+            this.tags.modal[0].openModal(event)
+        }
+    }
+
+     this.openNewRecursoForm = (event) => {
+       if (checkIsLogged(event)) {
+         this.tags.modal[1].openModal(event, event.item.protocol)
+       }
+     }
+
+
+
+    this.showRespostas = function () {
+        // 'this' here is a pedido
+        this.visible = true
+    }
+    this.hideRespostas = function () {
+        // 'this' here is a pedido
+        this.visible = false
+    }
+
+    this.watchDepends('pedidos', 'code', () => {
+        this.update()
+    })
+
+
+     // Subscription -----------------------------
+
+     this.waitings = {}
+     this.watches('subscriptions')
+
+     this.subscribe = event => {
+       if (checkIsLogged(event)) {
+         var id = event.item.notification_id
+         if (!this.waitings[id]) this.waitings[id] = {}
+         this.safeTriggerChange('subscribe', {id, author: event.item.notification_author}, this.waitings[id])
+       }
+     }
+
+     this.unsubscribe = event => {
+       if (checkIsLogged(event)) {
+         var id = event.item.notification_id
+         if (!this.waitings[id]) this.waitings[id] = {}
+         this.safeTriggerChange('unsubscribe', {id}, this.waitings[id])
+       }
+     }
+
+     // check if subscribed to id
+     this.checkSubscribed = id => {
+       if (this.subscriptions && this.subscriptions.value && this.subscriptions.value[id])
+         return true
+       else
+         return false
+     }
+
+
+    </script>
+</perguntas>

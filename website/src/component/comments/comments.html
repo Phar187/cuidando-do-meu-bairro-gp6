@@ -1,0 +1,58 @@
+<comments>
+    <h2>{ t('See the comments about this expense') }</h2>
+
+    <form class="form">
+        <div class="form-group">
+            <label class="sr-only" for="comment-textarea">
+                { t('Comment') }
+            </label>
+            <textarea class="form-control"
+                id="comment-textarea"
+                rows="3"
+                maxlength="500"
+                onfocus="{ checkIsLogged }"
+                placeholder="{ t('Your comment') }"/>
+        </div>
+        <button type="submit"
+                onclick="{ sendComment }"
+                class="btn btn-color-sec block-right relative">
+            <spinneror condition="sendCommentWaiting" scale="0.15">{ t("Send comment") }</spinneror>
+        </button>
+    </form>
+
+    <div class="comments-block">
+        <comment each="{ comments.comments }"
+                 top="true"
+                 code="{opts.code}"/>
+    </div>
+
+
+    <script>
+    import {checkIsLogged} from '../../store/auth'
+    this.checkIsLogged = checkIsLogged
+    this.mixin('base')
+    this.watches('username')
+    this.watchDepends('comments', 'code', () => this.update())
+
+    // Clear text-area
+    this.onControl(riot.SEC('sendCommentWaiting'), (params, ret) => {
+        if (ret) {
+            this['comment-textarea'].value = ""
+            this.update()
+        }
+    })
+
+    this.sendComment = event => {
+        console.log(this.code)
+        if (checkIsLogged(event)) {
+            if (this['comment-textarea'].value) {
+                this.safeTriggerChange('sendComment', {
+                    text: this['comment-textarea'].value,
+                    code: this.code,
+                })
+            }
+        }
+    }
+
+    </script>
+</comments>

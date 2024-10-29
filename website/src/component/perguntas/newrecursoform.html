@@ -1,0 +1,56 @@
+<new-recurso-form>
+    <div class="modal-body">
+        <h2>Recorrer</h2>
+
+        <p>Aqui você tem como enviar seu recurso a respeito do gasto. Lembre-se que tanto sua pergunta como a resposta que vai receber do órgão público responsável serão compartilhadas aqui nesse site para todas as pessoas que estiverem interessadas. Para aumentar as chances de receber uma resposta satisfatória, elabore sua recurso levando em conta algumas dicas, veja <a href="http://cafehacker.prefeitura.sp.gov.br/wp-content/uploads/2014/09/cartilha_acessoainfosp.pdf" target="_blank">aqui</a> algumas delas.
+        </p>
+
+        <form class="form">
+            <div class="form-group">
+                <label class="sr-only" for="new-recurso-textarea">
+                    { t('Question') }
+                </label>
+                <textarea id="new-recurso-textarea"
+                    class="form-control"
+                    onkeyup="{ update }"
+                    maxlength="{ maxPedidoLength }"
+                    rows="5"/>
+                    <p>{ t('Remaining characters') }: { remainingChars() }</p>
+            </div>
+            <button type="submit"
+                    onclick="{ sendRecurso }"
+                    class="btn btn-color-sec float-right relative">
+                <spinneror condition="sendRecursoWaiting" scale="0.15">{ t("Send") }</spinneror>
+            </button>
+        </form>
+    </div>
+
+  <script>
+    this.mixin('base')
+    this.maxPedidoLength = 5000
+
+    this.sendRecurso = () => {
+        if (this['new-recurso-textarea'].value) {
+            this.safeTriggerChange('sendRecurso', {
+                text: this['new-recurso-textarea'].value,
+                protocolo: this.parent.data
+            })
+        }
+    }
+
+    this.onControl(riot.SEC('sendRecursoWaiting'), (params, ret) => {
+        if (ret) {
+            this.parent.closeModal()
+            this.update()
+        }
+    })
+
+    this.onModalClose = () => {
+        this['new-recurso-textarea'].value = ''
+    }
+
+    this.remainingChars = () => {
+        return this.maxPedidoLength - this['new-recurso-textarea'].value.length
+    }
+  </script>
+</new-recurso-form>

@@ -1,0 +1,127 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Cuidando 2</title>
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no">
+
+    <link rel="apple-touch-icon" sizes="57x57" href="assets/icons/apple-touch-icon-57x57.png">
+    <link rel="apple-touch-icon" sizes="60x60" href="assets/icons/apple-touch-icon-60x60.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="assets/icons/apple-touch-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="assets/icons/apple-touch-icon-76x76.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="assets/icons/apple-touch-icon-114x114.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="assets/icons/apple-touch-icon-120x120.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="assets/icons/apple-touch-icon-144x144.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="assets/icons/apple-touch-icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="assets/icons/apple-touch-icon-180x180.png">
+    <link rel="icon" type="image/png" href="assets/icons/favicon-32x32.png" sizes="32x32">
+    <link rel="icon" type="image/png" href="assets/icons/favicon-194x194.png" sizes="194x194">
+    <link rel="icon" type="image/png" href="assets/icons/favicon-96x96.png" sizes="96x96">
+    <link rel="icon" type="image/png" href="assets/icons/favicon-16x16.png" sizes="16x16">
+    <link rel="manifest" href="assets/icons/manifest.json">
+    <meta name="msapplication-TileColor" content="#00aba9">
+    <meta name="msapplication-TileImage" content="assets/icons/mstile-144x144.png">
+    <meta name="theme-color" content="#ffffff">
+
+    <meta property="og:title" content="Cuidando do Meu Bairro" />
+    <meta property="og:url" content="https://cuidando.vc" />
+    <meta property="og:image" content="http://cuidando.vc/assets/icons/favicon-96x96.png" />
+    <meta property="og:image:secure_url" content="https://cuidando.vc/assets/icons/favicon-96x96.png" />
+
+
+    <!--     <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css"> -->
+    <!--     <script src="//code.jquery.com/jquery-2.1.4.min.js"></script> -->
+    <!--     <script src="//raw.githubusercontent.com/tagawa/bootstrap-without-jquery/master/bootstrap3/bootstrap-without-jquery.min.js"></script> -->
+    <!--     <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script> -->
+
+    <!--     <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.3/leaflet.css" /> -->
+    <!--     <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.5/leaflet.css" /> -->
+    <!--     <script src="//cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.5/leaflet.js"></script> -->
+
+    <!--     <script src="https://cdn.polyfill.io/v2/polyfill.js?features=fetch"></script> -->
+
+
+	<!-- Piwik -->
+	<script type="text/javascript">
+	  var _paq = _paq || [];
+	  /* tracker methods like "setCustomDimension" should be called before "trackPageView" */
+	  _paq.push(['trackPageView']);
+	  _paq.push(['enableLinkTracking']);
+	  (function() {
+		var u="//devcolab.each.usp.br/piwik/";
+		_paq.push(['setTrackerUrl', u+'piwik.php']);
+		_paq.push(['setSiteId', '7']);
+		var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];
+		g.type='text/javascript'; g.async=true; g.defer=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+	  })();
+	</script>
+	<!-- End Piwik Code -->
+
+  </head>
+  <body>
+    <app></app>
+
+    <script id="polyfill-loader">
+    polyfills = {
+        i18n: 'Intl.~locale.pt-BR|always,Intl.~locale.en|always',
+        fetch: 'fetch',
+        promise: 'Promise',
+        assign: 'Object.assign'
+    }
+    neededPolyfills = []
+
+    // Fetch
+    if (!(window.fetch)){
+        neededPolyfills.push(polyfills.fetch)
+    }
+    // I18n
+    if (!(window.Intl && typeof window.Intl === "object")){
+        neededPolyfills.push(polyfills.i18n)
+    }
+    // Promise
+    if (!('Promise' in window && 'resolve' in window.Promise &&
+    'reject' in window.Promise && 'all' in window.Promise &&
+    'race' in window.Promise && (function() {var resolve;
+    new window.Promise(function(r) { resolve = r; });
+    return typeof resolve === 'function';}()))) {
+        neededPolyfills.push(polyfills.promise)
+    }
+    // Object.assign
+    if (!(Object.assign)) {
+        neededPolyfills.push(polyfills.assign)
+    }
+
+    function addScript(prevTag, src) {
+        var script = document.createElement('script')
+        script.type = 'text/javascript'
+        script.src = src
+        script.async = false
+        script.defer = true
+        prevTag.parentNode.insertBefore(script, prevTag.nextSibling)
+        return script
+    }
+
+    var currTag = document.getElementById('polyfill-loader')
+
+    var isGoogleBot = /googlebot/i.test(navigator.userAgent)
+
+    if (neededPolyfills.length) {
+        if (isGoogleBot) {
+            // Allows GoogleBot indexing even though polyfill.io doesn't
+            currTag = addScript(currTag, 'poly.js')
+        } else {
+            currTag = addScript(
+                currTag,
+                'https://cdn.polyfill.io/v2/polyfill.min.js?features='
+            + neededPolyfills.join(',')
+            )
+        }
+    }
+
+    currTag = addScript(currTag, 'dist/vendor.bundle.js')
+    addScript(currTag, 'dist/bundle.js')
+    </script>
+    <!-- <script src="dist/vendor.bundle.js"></script> -->
+    <!-- <script src="dist/bundle.js"></script> -->
+  </body>
+</html>

@@ -1,0 +1,7 @@
+{
+  "plugins": [
+    "transform-runtime",
+	"syntax-async-functions"
+  ],
+  "presets": ["es2015-riot"]
+}

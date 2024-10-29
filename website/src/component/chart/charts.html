@@ -1,0 +1,91 @@
+<charts>
+    <div class="row">
+        <div class="col-lg-6 margin-bottom">
+            <div class="inline-block donut-group not-mapped">
+                <donut color={colorNM} percentage={perNotMapped}/>
+                <p class="abs-number">{rowsNotMapped}</p>
+                <p>{ t('Not mapped') }</p>
+            </div>
+            <div class="inline-block donut-group mapped">
+                <donut color={colorM} percentage={perMapped}/>
+                <p class="abs-number">{rowsMapped}</p>
+                <p>{ t('Mapped') }</p>
+            </div>
+        </div>
+
+        <div class="col-lg-6">
+            <div class="inline-block values-block">
+                <div each="{ v in values }" class="value-block">
+                    <div class="icon-block">
+                        <img src="{ assets[v.name] }">
+                        <span class="capitalize">{ t(v.name) }</span>
+                    </div>
+                    <div class="bar-block">
+                        <bar color={colorNM}
+                             class="not-mapped"
+                             title="{ t('Not mapped') }"
+                             absolute={v.notMapped.abs}
+                             percentage={v.notMapped.per}/>
+                        <bar color={colorM}
+                             class="mapped"
+                             title="{ t('Mapped') }"
+                             absolute={v.mapped.abs}
+                             percentage={v.mapped.per}/>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <script>
+    import {format} from '../../utils/helpers'
+    this.mixin('base')
+
+    this.year = opts.year
+    this.yearinfo = ''
+
+    // this.colorM = "06A3C6"
+    // this.colorNM = "F65F2D"
+    this.colorM = this.assets.patM
+    this.colorNM = this.assets.patNM
+
+    //this.perNotMapped = 0
+    //this.perMapped = 0
+    //values = {
+    //    mapped: {per: 0},
+    //    notmapped: {per: 0},
+    //}
+
+    this.watchDepends('yearinfo', 'year', () => {
+        if (this.yearinfo) {
+            // Rows
+            this.perMapped = Math.round(
+                this.yearinfo.rows.mapped / this.yearinfo.rows.total * 100)
+            this.perNotMapped = 100 - this.perMapped
+            this.rowsNotMapped = format(this.yearinfo.rows.total - this.yearinfo.rows.mapped)
+            this.rowsMapped = format(this.yearinfo.rows.mapped)
+
+            // Values
+            this.values = []
+            for (let info of this.yearinfo.values) {
+                if (info.name != 'orcado') {
+                    let notMapped = info.total - info.mapped
+                    this.values.push({
+                        name: info.name == 'atualizado' ? 'planejado' : info.name,
+                        mapped: {
+                            abs: `R$${format(info.mapped)}`,
+                            per: Math.round(info.mapped / info.total * 100),
+                        },
+                        notMapped: {
+                            abs: `R$${format(notMapped)}`,
+                            per: Math.round(notMapped / info.total * 100),
+                        }
+                    })
+                }
+            }
+            this.update()
+        }
+    })
+    </script>
+</charts>

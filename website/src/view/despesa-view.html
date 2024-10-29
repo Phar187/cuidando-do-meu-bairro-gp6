@@ -1,0 +1,245 @@
+<despesa-view class="">
+
+    <div class="container-fluid light-dark-bg">
+        <div class="row">
+            <div class="container">
+                <div class="row">
+                    <div class="col-sm-12 padded-col">
+                        <a class="back-to-year"
+                        onclick={fRoute('ano')}>
+                            <span class="left-arrow"/>
+                            { t('back to year') }
+                        </a>
+                    </div>
+                </div>
+                <div class="row relative">
+                    <div id="minimap-container" class="col-md-4">
+                        <div if="{ !this.pointinfo.geometry }"
+                             class="not-mapped-msg-container">
+                            <div class="not-mapped-msg">
+                                { t('Not mapped') }
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-8">
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <h2>{ t('Program') }: { this.pointinfo.ds_programa }</h2>
+                                <h2>{ t('Expense') }: { this.pointinfo.ds_projeto_atividade }</h2>
+                                <spinner class="dark-spinner" if="{ !this.pointinfo }" scale="0.25"/>
+                            </div>
+                        </div>
+
+                        <div if="{ this.pointinfo }" class="row">
+                            <div each="{ cat, i in categories }" class="col-sm-4 category">
+                                <div class="subtitle">{ t(cat) }</div>
+                                <raw class="moedas { cat }"
+                                     content="{ parent.assets.moedas }"/>
+                                <div class="value">R$ { formatCur(this[cat]) }</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div if="{ this.pointinfo }" class="row text-right" if="{ updateTime }">
+                    <div class="col-sm-12 padded-col">
+                        { t('data updated at') }: { updateTime }
+                    </div>
+                </div>
+
+                <button type="submit"
+                        if="{ !checkSubscribed(pointinfo.notification_id) }"
+                        onclick="{ subscribeExpense }"
+                        class="btn btn-color-sec block-right relative margin-bottom">
+                  <spinneror condition="subscribeWaiting" scale="0.15">{ t("Follow expense") }</spinneror>
+                </button>
+                <button type="submit"
+                        if="{ checkSubscribed(pointinfo.notification_id) }"
+                        onclick="{ unsubscribeExpense }"
+                        class="btn btn-color-sec block-right relative margin-bottom">
+                  <spinneror condition="unsubscribeWaiting" scale="0.15">{ t("Unfollow expense") }</spinneror>
+                </button>
+
+                <div if="{ this.pointinfo }" class="top-bar orgao-box">
+                    <span class="block-decorator"/>
+                    <span class="key">{ t('Accountable body') }:</span>
+                    <span class="value">{this.orgao}</span>
+                </div>
+
+                <ul if="{ this.pointinfo }" class="list-bare top-bar bottom-bar despesa-details-list">
+                    <li each={el, i in mainKeys}>
+                        <span class="key">{el[0]}:</span>
+                        <span>{el[1]}</span>
+                    </li>
+
+
+                    <li each={empenho in empenhos}>
+                      <a href="{ 'http://sfemp.prefeitura.sp.gov.br/extrato_empenho.aspx?Empenho=' + empenho.codEmpenho + '&Ano=' + empenho.anoEmpenho }" target="_blank">Nota de empenho</a>
+                    </li>
+
+
+                    <li><a href="http://e-negocioscidadesp.prefeitura.sp.gov.br/BuscaLicitacao.aspx" target="_blank">Licitações - Pesquise aqui</a></li>
+                    <li><a href="http://transparencia.prefeitura.sp.gov.br/contas/Paginas/Contratos-v2.aspx" target="_blank">Contratos - Pesquise aqui</a></li>
+                    <li><a href="https://www.instantstreetview.com/@{ this.pointinfo.geometry.coordinates[1] },{ this.pointinfo.geometry.coordinates[0] },0h,0p,1z" target="_blank">Visão da rua</a></li>
+
+
+                    <a if="{ !showAllInfo }"
+                       class="small-font"
+                        onclick="{ doShowAll }">
+                        mais
+                    </a>
+
+                </ul>
+
+                <ul if="{ showAllInfo && this.pointinfo }"
+                    class="list-bare bottom-bar despesa-details-list">
+                    <li each={key, i in keys}>
+                        <span class="key">{key}:</span>
+                        <span>{this.pointinfo[key]}</span>
+                    </li>
+                    <a if="{ showAllInfo }"
+                       class="small-font"
+                        onclick="{ donotShowAll }">
+                        esconder
+                    </a>
+                </ul>
+
+            </div>
+        </div>
+    </div>
+
+    <perg-com-tabs/>
+
+    <script>
+    import {formatCur} from '../utils/helpers'
+    import ajax from '../utils/ajax'
+    import map from '../component/map/map.js'
+    import {checkIsLogged} from '../store/auth'
+    this.checkIsLogged = checkIsLogged
+    this.formatCur = formatCur
+    this.mixin('base')
+    // this.code = opts.code
+    this.code = this.router.getParam('code')
+    this.showAllInfo = false
+    this.empenhos = []
+    this.doShowAll = () => this.showAllInfo = true
+    this.donotShowAll = () => this.showAllInfo = false
+
+    this.categories = ['planejado', 'empenhado', 'liquidado']
+    this.mainKeysNames = [
+        ['ds_despesa', 'Despesa'],
+        ['ds_fonte', 'Fonte'],
+        ['ds_funcao', 'Função'],
+    ]
+
+    this.getUpdateTime = () => {
+        if (this.pointinfo) {
+            if (this.pointinfo.dataextracao)
+              return this.pointinfo.dataextracao
+            if (this.pointinfo.datafinal)
+                return this.pointinfo.datafinal
+            if (this.pointinfo['cd_anoexecucao'])
+                return this.pointinfo['cd_anoexecucao']
+            if (this.pointinfo['cd_exercicio'])
+                return this.pointinfo['cd_exercicio']
+        }
+        return undefined
+    }
+
+    // reset pointinfo so loading spinner appears
+    this.watches('code', () => this.pointinfo = null)
+
+     /* this.watchDepends('subscriptions', 'username', () => {this.update()}) */
+     this.watches('subscriptions')
+     this.watches('username', () => {
+       riot.control.trigger(riot.VEL('subscriptions'), '', true)
+     })
+
+    this.watchDepends('pointinfo', 'code', () => {
+        if (this.pointinfo) {
+            this.mainKeys = []
+            for (let name of this.mainKeysNames) {
+                let value = this.pointinfo[name[0]]
+                if (value) this.mainKeys.push([name[1], value])
+            }
+
+            this.keys = Object.keys(this.pointinfo)
+
+            this.planejado = this.pointinfo.sld_orcado_ano
+            if (this.pointinfo.vl_atualizado)
+                this.planejado = this.pointinfo.vl_atualizado
+            this.empenhado = this.pointinfo.vl_empenhadoliquido
+            this.liquidado = this.pointinfo.vl_liquidado
+            this.orgao = this.pointinfo.ds_orgao
+            this.updateTime = this.getUpdateTime()
+            if (this.pointinfo.geometry) {
+                let [lng, lat] = this.pointinfo.geometry.coordinates
+                map.setCenter([lat, lng])
+            }
+            this.update()
+
+            // Empenhos link
+            var self = this
+            var filters = {
+                anoEmpenho: 'cd_exercicio',
+                codOrgao: 'cd_orgao',
+                codModalidade: 'cd_modalidade',
+                codFuncao: 'cd_funcao',
+                codSubFuncao: 'cd_subfuncao',
+                codProjetoAtividade: 'projetoatividade',
+                codPrograma: 'cd_programa',
+                codElemento: 'cd_elemento',
+                codFonteRecurso: 'cd_fonte',
+                codCategoria: 'categoria_despesa',
+                codGrupo: 'grupo_despesa',
+            }
+            var strFilters = '&mesEmpenho=12&' + Object.keys(filters).map(k => k + '=' + this.pointinfo[filters[k]]).join('&')
+            ajax({
+                url: 'https://gatewayapi.prodam.sp.gov.br:443/financas/orcamento/sof/v2.1.0/consultaEmpenhos?' + strFilters,
+                headers: {
+                    Authorization: 'Bearer 198f959a5f39a1c441c7c863423264'
+                }
+            }).then(function (response) {
+                self.empenhos = response.lstEmpenhos
+                self.update()
+            })
+        }
+    })
+
+     this.subscribeExpense = event => {
+       if (checkIsLogged(event)) {
+          this.safeTriggerChange('subscribe', {
+            id: this.pointinfo.notification_id,
+            author: this.pointinfo.notification_author,
+          })
+       }
+     }
+
+     this.unsubscribeExpense = event => {
+       if (checkIsLogged(event)) {
+         this.safeTriggerChange('unsubscribe', {
+           id: this.pointinfo.notification_id,
+         })
+       }
+     }
+
+     // check if subscribed to id
+     this.checkSubscribed = id => {
+       if (this.subscriptions && this.subscriptions.value && this.subscriptions.value[id])
+         return true
+       else
+         return false
+     }
+
+    this.preunmount = () => {
+        document.getElementById('bigmap-container')
+            .appendChild(document.getElementById('map-parent-container'))
+    }
+
+    this.one('mount', () => {
+        document.getElementById('minimap-container')
+            .appendChild(document.getElementById('map-parent-container'))
+    })
+    </script>
+</despesa-view>

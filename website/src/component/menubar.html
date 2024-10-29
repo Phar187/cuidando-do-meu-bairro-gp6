@@ -1,0 +1,121 @@
+<menubar>
+    <nav class="navbar navbar-fixed-top">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button"
+                        class="navbar-toggle collapsed"
+                        onclick="{ toggleExpanded }"
+                        data-toggle="collapse"
+                        data-target="#navbar"
+                        aria-expanded="{ isExpanded ? true : false }"
+                        aria-controls="navbar">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a id="home-button"
+                   class="navbar-brand"
+                   onclick="{ specialRoute('home') }">
+                    <!--                     <img src="assets/logo.svg"> -->
+                    <img src="{ assets.logo }">
+                    <span class="beta-mark">BETA</span>
+                </a>
+            </div>
+
+            <div id="navbar"
+                 class="collapse navbar-collapse {in: isExpanded}">
+                <ul class="nav navbar-nav navbar-right">
+                    <li><a onclick={ specialRoute('texto sobre') }>
+                        { t("About") }
+                    </a></li>
+
+					<li><a href="http://blog.cuidando.vc" target="_blank">Blog</a></li>
+
+                    <li>
+                        <a onclick={ share }>
+                            { t("Share") }
+                        </a>
+                    </li>
+
+                    <li if={ username }>
+                        <a onclick={ specialRoute('pessoa ' + username) }>
+                        { username }
+                        </a>
+                    </li>
+                    <li if={ !username }>
+                        <a onclick={ openLoginModal }>
+                        { t("Login") }
+                        </a>
+                    </li>
+                    <li if={ username }><a onclick={ sendLogout }>
+                        { t("Logout") }
+                    </a></li>
+
+                    <li>
+                        <styled-select options="{ langs }"
+                                       current="{ lang }"
+                                       onchange={ selectedLang }/>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <modal id="modal-login">
+        <login-form/>
+    </modal>
+
+
+    <script>
+    import translator from '../utils/translator'
+    import router from '../store/router'
+    this.mixin('base')
+    this.watches('username')
+    this.langs = translator.getLangs().map((x) => {
+        return {key: x.code, value: x.name}
+     })
+
+    this.isExpanded = false
+    this.toggleExpanded = () => this.isExpanded = !this.isExpanded
+    this.closeExpanded = () => this.isExpanded = false
+
+    this.openLoginModal = (event) => {
+       this.closeExpanded()
+       this['modal-login']._tag.openModal(event)
+    }
+
+    this.onControl(riot.SEC('lang'), (lang) => {
+        if (this.lang != lang) {
+            this.lang = lang
+            translator.setLang(lang)
+            // Update EVERYTHING!
+            riot.update()
+        }
+    })
+    this.lang = router.getParam('lang')
+
+    this.selectedLang = (lang) => {
+        this.closeExpanded()
+        this.triggerChange('lang', lang)
+        // Prevent update, translator will do it
+        //event.preventUpdate = true
+    }
+
+    this.sendLogout = () => this.triggerChange('logout')
+
+    this.share = () => {
+        this.closeExpanded()
+        let page = encodeURIComponent(location.href)
+        location.href = `http://www.facebook.com/sharer.php?u=${page}`
+    }
+
+    // A wrapper to route that also closes the menu if is expanded
+    this.specialRoute = (a, b) => {
+        return () => {
+            this.closeExpanded()
+            this.router.route(a, b)
+        }
+    }
+    </script>
+</menubar>

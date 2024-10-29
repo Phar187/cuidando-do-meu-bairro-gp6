@@ -1,0 +1,135 @@
+<new-pergunta-form>
+    <div class="modal-body">
+        <h2>O que deseja perguntar?</h2>
+
+        <p>Aqui você tem como enviar sua dúvida a respeito do gasto. Lembre-se que tanto sua pergunta como a resposta que vai receber do órgão público responsável serão compartilhadas aqui nesse site para todas as pessoas que estiverem interessadas. Para aumentar as chances de receber uma resposta satisfatória, elabore sua pergunta levando em conta algumas dicas, veja <a href="http://cafehacker.prefeitura.sp.gov.br/wp-content/uploads/2014/09/cartilha_acessoainfosp.pdf" target="_blank">aqui</a> algumas delas.
+        </p>
+
+        <!--
+        <styled-select class="separated-caret text-left"
+                       options="{ mainDests }"
+                       current="{ mainDest }"
+                       onchange={ mainDestSelected }
+                       outclicklimit="{ parent.root }"/>
+        -->
+
+        <p if="{ !orgao }"><b>Ops... Parece que não conseguimos achar, na lista do Esic, o órgão responsável por essa despesa. Por favor, escolha um na lista abaixo.</b></p>
+
+        <styled-select class="separated-caret text-left"
+                       options="{ orgaos.value }"
+                       current="{ orgao }"
+                       onchange={ secondDestSelected }
+                       outclicklimit="{ parent.root }"/>
+
+        <p>{ startPedido() }</p>
+
+        <form class="form">
+            <div class="form-group">
+                <label class="sr-only" for="new-pergunta-textarea">
+                    { t('Question') }
+                </label>
+                <textarea id="new-pergunta-textarea"
+                    class="form-control"
+                    onkeyup="{ update }"
+                    maxlength="{ maxPedidoLength }"
+                    rows="5"/>
+                    <p>{ t('Remaining characters') }: { remainingChars() }</p>
+            </div>
+            <button type="submit"
+                    onclick="{ sendPedido }"
+                    class="btn btn-color-sec float-right relative">
+                <spinneror condition="sendPedidoWaiting" scale="0.15">{ t("Send") }</spinneror>
+            </button>
+        </form>
+
+        <p>Li e concordo com os <a>termos de uso</a>.</p>
+
+    </div>
+
+    <script>
+    this.mixin('base')
+    this.maxPedidoLength = 5000
+
+    this.startPedido = () => {
+        if (this.pointinfo)
+            return `Referente ao gasto público "${this.pointinfo.ds_projeto_atividade}", de ${this.pointinfo.cd_anoexecucao}, cujo órgão responsável é "${this.pointinfo.ds_orgao}", solicito informações:`
+        else
+            return ''
+    }
+
+    this.bestFitOrgao = () => {
+        // If has a orgaos list
+        if(this.orgaos && this.orgaos.value) {
+            // Tries to find the correct orgao for this despesa
+            this.orgao = null
+            if (this.pointinfo) {
+                for (let orgao of this.orgaos.value) {
+                    if(orgao.key.indexOf(this.pointinfo.ds_orgao) != -1) {
+                        this.orgao = orgao.key
+                        break
+                    }
+                }
+            }
+            // If orgao not found, set to first
+            // if (!this.orgao) this.orgao = this.orgaos.value[0].key
+        }
+    }
+
+    this.watches('orgaos', () => {
+        this.bestFitOrgao()
+    })
+
+    this.watchDepends('pointinfo', 'code', () => {
+        this.bestFitOrgao()
+        this.update()
+    })
+
+    // this.mainDests = [
+    //     {key: 'camara', value: 'camara'},
+    //     {key: 'prefeitura', value: 'prefeitura'}
+    // ]
+    // this.mainDest = 'prefeitura'
+    // this.mainDestSelected = (option) => {
+    //     this.mainDest = option
+    //     this.update()
+    // }
+
+    //this.secondDests = [
+    //    {key: 'camara', value: 'camara'},
+    //    {key: 'prefeitura', value: 'prefeitura'}
+    //]
+    //this.secondDest = 'prefeitura'
+    this.secondDestSelected = (option) => {
+        this.orgao = option
+        this.update()
+    }
+
+    this.sendPedido = () => {
+        if (this['new-pergunta-textarea'].value) {
+            var selectedOrgao = this.tags['styled-select'].getCurrent()
+            if (selectedOrgao && selectedOrgao != '...') {
+                this.safeTriggerChange('sendPedido', {
+                    text: this.startPedido() + ' ' + this['new-pergunta-textarea'].value,
+                    orgao: selectedOrgao,
+                    keywords: [this.parent.parent.code]
+                })
+            }
+        }
+    }
+
+    this.onControl(riot.SEC('sendPedidoWaiting'), (params, ret) => {
+        if (ret) {
+            this.parent.closeModal()
+            this.update()
+        }
+    })
+
+    this.onModalClose = () => {
+        this['new-pergunta-textarea'].value = ''
+    }
+
+    this.remainingChars = () => {
+        return this.maxPedidoLength - this['new-pergunta-textarea'].value.length
+    }
+    </script>
+</new-pergunta-form>

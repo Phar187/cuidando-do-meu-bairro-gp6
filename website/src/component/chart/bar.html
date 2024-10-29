@@ -1,0 +1,30 @@
+<bar>
+    <div class="outer-bar">
+        <div class="inner-bar"
+             onmouseenter="{ openTooltip }"
+             onmouseleave="{ closeTooltip }"
+             style="width:{opts.percentage}%; background-image:url('{opts.color}');"/>
+            <!--              style="width:{opts.percentage}%; background-color:#{opts.color};"/> -->
+            <div class="tooltip { opts.class }"
+                role="tooltip"
+                if="{ isShowingTooltip }">
+                <div class="darker-text number">
+                    { opts.absolute }
+                </div>
+                <div>
+                    { opts.title }
+                </div>
+            </div>
+    </div>
+
+    <script>
+    this.isShowingTooltip = false
+    this.openTooltip = (event) => {
+        /*         console.log(event) */
+            /*         this.x = event.layerX
+               this.y = event.layerY */
+        this.isShowingTooltip = true
+    }
+    this.closeTooltip = () => this.isShowingTooltip = false
+    </script>
+</bar>

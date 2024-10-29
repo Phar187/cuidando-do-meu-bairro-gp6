@@ -1,0 +1,290 @@
+<login-form>
+    <!-- Modal -->
+    <div class="modal-header">
+        <img class="block-center" src="{ assets.logo }">
+    </div>
+
+    <div class="text-center modal-body">
+
+        <!-- Error messages -->
+        <p class="text-center msg error-msg">
+            { t(authError.message) }
+        </p>
+
+        <p if="{ view.forgot2 }">
+            {t('login_form_use_reset_code', {minutes: exp_reset_code})}
+        </p>
+
+        <form class="form">
+
+            <!-- Username -->
+            <div class="form-group">
+                <label class="sr-only"
+                        for="login-form-username">
+                    { t('Username') }
+                </label>
+                <input type="text"
+                        class="form-control { checkFieldError('username') }"
+                        id="login-form-username"
+                        placeholder="{ t('Username') }">
+            </div>
+
+            <!-- Email -->
+            <div class="form-group"
+                    if={ !view.login }>
+                <label class="sr-only" for="login-form-email">
+                    { t('E-mail') }
+                </label>
+                <input type="email"
+                    class="form-control { checkFieldError('email') }"
+                    id="login-form-email"
+                    placeholder="{ t('E-mail') }">
+            </div>
+
+            <!-- Reset Code -->
+            <div class="form-group"
+                 if="{ view.forgot2 }">
+                <label class="sr-only"
+                    for="login-form-code">
+                    { t("Code") }
+                </label>
+                <input type="text"
+                        class="form-control { checkFieldError('code') }"
+                        id="login-form-code"
+                        autocomplete="off"
+                        placeholder="{ t('Code') }">
+            </div>
+
+            <!-- Password -->
+            <div class="form-group"
+                 if="{ !view.forgot1 }">
+                <label class="sr-only"
+                        for="login-form-password">
+                    { t('Password') }
+                </label>
+                <input type="password"
+                        class="form-control { checkFieldError('password') }"
+                        id="login-form-password"
+                        placeholder="{ t('Password') }">
+            </div>
+
+            <!-- Confirm Password -->
+            <div class="form-group"
+                 if={ view.register || view.forgot2 }>
+                <label class="sr-only"
+                        for="login-form-confirm-password">
+                    { t("Confirm Password") }
+                </label>
+                <input type="password"
+                        class="form-control { checkFieldError('confirm-password') }"
+                        id="login-form-confirm-password"
+                        placeholder="{ t('Confirm Password') }">
+            </div>
+
+            <!-- Request Login -->
+            <button type="submit"
+                    class="btn btn-color-sec modal-button"
+                    onclick={ sendLogin }
+                    if={ view.login }>
+                <spinneror condition="loginWaiting" scale="0.15">{ t("Login") }</spinneror>
+            </button>
+
+            <!-- Request Register -->
+            <button type="submit"
+                    class="btn btn-color-sec modal-button"
+                    onclick={ sendRegister }
+                    if={ view.register }>
+                <spinneror condition="registerWaiting" scale="0.15">{ t("Register") }</spinneror>
+            </button>
+
+            <!-- Request Reset Code -->
+            <button type="submit"
+                    class="btn btn-color-sec modal-button"
+                    onclick={ sendForgot1 }
+                    if={ view.forgot1 }>
+                <spinneror condition="forgotPasswordWaiting" scale="0.15">{ t("Request reset code") }</spinneror>
+            </button>
+
+            <!-- Request Reset -->
+            <button type="submit"
+                    class="btn btn-color-sec modal-button"
+                    onclick={ sendForgot2 }
+                    if={ view.forgot2 }>
+                <spinneror condition="resetPasswordWaiting" scale="0.15">{ t("Change password and login") }</spinneror>
+            </button>
+        </form>
+
+        <div>
+            <a class="modal-anchor"
+                    onclick="{ fChangeView('register') }"
+                    if={ view.login }>
+                { t("Register") }
+            </a>
+        </div>
+
+        <div>
+            <a class="modal-anchor"
+                    onclick={ fChangeView('forgot1') }
+                    if={ view.login }>
+                { t("Forgot password") }
+            </a>
+        </div>
+
+        <!-- <div if="{ view.login || view.register }"> -->
+        <!-- <div class="relative separator-block"> -->
+        <!-- <span class="bar-decorator"/> -->
+        <!-- <div class="block-center separator"> -->
+        <!-- <span>{ t('or') }</span> -->
+        <!-- </div> -->
+        <!-- </div> -->
+        <!-- Facebook Login -->
+        <!-- <button id="login-facebook" -->
+        <!-- onclick={ startFacebookLogin } -->
+        <!-- class="btn modal-button login-facebook"> -->
+        <!-- { t('Login Facebook') } -->
+        <!-- </button> -->
+        <!-- </div> -->
+    </div>
+
+
+    <script>
+    import {capitalize} from '../utils/helpers'
+    this.mixin('base')
+    this.watches('authError')
+
+    this.exp_reset_code = 0
+
+    this.view = {login: true}
+
+    // Clears error message
+    this.clearError = () => this.authError = undefined
+
+    // Change modal view
+    this.changeView = (view, event) => {
+        this.clearError()
+        this.view = {}
+        this.view[view] = true
+        // acme to avoid closing modal
+        if (event) event.ignoreEvent = true
+    }
+    // Wrapper to return a function
+    this.fChangeView = view => event => this.changeView(view, event)
+
+    // Extra function to be run when the modal is closed
+    this.onModalClose = () => {
+        this.view = {login: true}
+        // Clear inputs
+        for (let el of Array.prototype.slice.call(this.root.getElementsByTagName('input')))
+            el.value = ''
+        this.clearError()
+    }
+
+    // Get a field value from the modal
+    this.getFieldValue = (name) => this[`login-form-${name}`].value
+
+    // Set an error message and the incorrect fields
+    this.setError = (msg, fields) => {
+        this.authError = {
+            message: msg,
+            fields: fields
+        }
+    }
+
+    // Check if fields are not empty
+    this.checkNotEmpty = (names) => {
+        names = names.split(' ')
+        for (let name of names) {
+            if (!this.getFieldValue(name)) {
+                this.setError(this.t(capitalize(name)) + this.t(' cannot be empty...'), [name])
+                return false
+            }
+        }
+        return true
+    }
+
+    // Check if password and confirm-password are the same
+    this.checkPasswordsSame = () => {
+        if(this.getFieldValue('password') !=
+            this.getFieldValue('confirm-password')) {
+            this.setError('Different passwords',
+                          ['password', 'confirm-password'])
+            return false
+        } else return true
+    }
+
+    // Tries to login user with current fields data
+    this.sendLogin = () => {
+        if(this.checkNotEmpty('username password')) {
+            this.clearError()
+            this.safeTriggerChange('login', {
+                username: this.getFieldValue('username'),
+                password: this.getFieldValue('password')
+            })
+        }
+    }
+
+    // Tries to register user with current fields data
+    this.sendRegister = () => {
+        if(this.checkNotEmpty('username password') &&
+           this.checkPasswordsSame()) {
+            this.clearError()
+            this.safeTriggerChange('register', {
+                username: this.getFieldValue('username'),
+                password: this.getFieldValue('password'),
+                email: this.getFieldValue('email')
+            })
+        }
+    }
+
+    // Request a reset code
+    this.sendForgot1 = () => {
+        if(this.checkNotEmpty('username email')) {
+            this.clearError()
+            this.safeTriggerChange('forgotPassword', {
+                username: this.getFieldValue('username'),
+                email: this.getFieldValue('email')
+            })
+        }
+    }
+
+    // Tries to reset password and login
+    this.sendForgot2 = () => {
+        if(this.checkNotEmpty('username password code') &&
+           this.checkPasswordsSame()) {
+            this.clearError()
+            this.safeTriggerChange('resetPassword', {
+                username: this.getFieldValue('username'),
+                password: this.getFieldValue('password'),
+                email: this.getFieldValue('email'),
+                code: this.getFieldValue('code')
+            })
+        }
+    }
+
+    // Facebook login
+    this.startFacebookLogin = () => this.triggerChange('loginFacebook')
+
+    // Closes modal when user changes (should mean a successfully login...)
+    this.onControl(riot.SEC('username'), data => {
+        this.parent.closeModal()
+        this.parent.update()
+    })
+
+    this.onControl(riot.SEC('forgotPasswordWaiting'), (params, exp) => {
+        if (exp) {
+            this.exp_reset_code = exp / 60
+            this.changeView('forgot2')
+            this['login-form-code'].value = ''
+            this.update()
+        }
+    })
+
+    // Returns the class to mark an input field as incorrect,
+    // if it is realy incorrect
+    this.checkFieldError = (field) => {
+        if (this.authError && this.authError.fields.indexOf(field) != -1) {
+                return 'incorrect-field'
+        } else return ''
+    }
+    </script>
+</login-form>

@@ -1,0 +1,42 @@
+<app>
+    <menubar/>
+
+    <msg-shower/>
+
+    <map showmap={ checkMapVisibility() }
+         big="{ this.bigmap }"/>
+
+
+    <!--
+    <div class="container{-fluid: this.bigmap}">
+        <div class="row">
+        </div>
+    </div>
+    -->
+
+    <div id="mainview"></div>
+    <!-- <div class="container-fluid"> -->
+    <!-- </div> -->
+
+
+    <script>
+    this.mixin('base')
+    this.watches('_root')
+
+    // Views that should display the map
+    this.showMapIn = ['home', 'ano', 'despesa']
+
+    // Check if the map should be displayed or not
+    this.checkMapVisibility = () => {
+        return this.showMapIn.indexOf(this['_root']) != -1
+    }
+
+    this.on('mount', () => {
+        this.router.init()
+    })
+
+    this.on('update', () => {
+        this.bigmap = this._root == 'despesa' ? false : true
+    })
+    </script>
+</app>

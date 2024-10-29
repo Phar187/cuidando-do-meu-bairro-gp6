@@ -1,0 +1,26 @@
+<year-selector>
+    <styled-select class="separated-caret"
+                   options="{ prepareYearsList() }"
+                   current="{ year }"
+                   onchange={ selectedYear }/>
+
+
+    <script>
+    this.mixin('base')
+
+    this.year = opts.year
+    this.watches('years year')
+
+    this.selectedYear = (year) => {
+        this.triggerChange('year', year)
+    }
+
+    this.prepareYearsList = () => {
+        if (this.years && this.years.value) {
+            return this.years.value.map((x) => {return {key: x, value: x}})
+        } else {
+            return []
+        }
+    }
+    </script>
+</year-selector>

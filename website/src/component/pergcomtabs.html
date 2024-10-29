@@ -1,0 +1,73 @@
+<perg-com-tabs>
+    <div class="container-fluid light-dark-bg">
+        <div class="row tabs-row">
+            <div class="container">
+                <ul class="list-bare">
+                    <div class="row">
+                        <li class="tab { is-active: parent.isActiveTab(tab.ref) }"
+                            each={ tab, i in tabs }
+                            onclick={ parent.toggleTab }>
+                            <span class="block-decorator"/>
+                            <div class="number">{tab.count}</div>
+                            <div>{ t(tab.title) }</div>
+                        </li>
+                    </div>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div class="container tabContent">
+        <div class="tabContent__item"
+             if={ is-active: isActiveTab('c') }>
+            <comments/>
+        </div>
+        <div class="tabContent__item"
+             if={ is-active: isActiveTab('p') }>
+            <perguntas/>
+        </div>
+    </div>
+
+
+    <script>
+    this.mixin('base')
+
+    this.tabs = [
+        { title: 'questions', ref: 'p', count: 0 },
+        { title: 'comments', ref: 'c', count: 0 },
+    ]
+
+    this.activeTab = 'p'
+
+    this.isActiveTab = (tab) => {
+        return this.activeTab === tab
+    }
+
+    this.toggleTab = (e) => {
+        this.activeTab = e.item.tab.ref
+    }
+
+    this.updateCommentCount = () => {
+        if (this.comments) {
+            this.tabs[1].count = this.comments.count
+        } else {
+            this.tabs[1].count = 0
+        }
+        this.update()
+    }
+
+    this.updatePedidosCount = () => {
+        if (this.pedidos) {
+          this.tabs[0].count = (
+            this.pedidos.pedidos.length +
+            this.pedidos.prepedidos ? this.pedidos.prepedidos.length : 0)
+        } else {
+            this.tabs[0].count = 0
+        }
+        this.update()
+    }
+
+    this.watchDepends('comments pedidos', 'code',
+        this.updateCommentCount, this.updatePedidosCount)
+    </script>
+</perg-com-tabs>

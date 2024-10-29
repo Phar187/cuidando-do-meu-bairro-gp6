@@ -1,0 +1,100 @@
+<map>
+    <div class="input-group search-address"
+         if="{ opts.big && opts.showmap }">
+        <input id="search-address-input"
+               class="input-medium search-query form-control"
+               type="text"
+               onkeypress="{ ifEnter(locateAddress) }"
+               placeholder="{ t('Search for an address') }">
+        <span class="input-group-btn">
+            <button onclick="{ locateAddress }"
+                    class="btn btn-color-sec"
+                    type="button">
+                <img src="{ assets.lupa }">
+            </button>
+        </span>
+    </div>
+    <div id="bigmap-container">
+        <div id="map-parent-container" class="{ map-big: opts.big }"
+             if="{ opts.showmap }">
+            <div id="map-container"></div>
+            <div if="{ opts.big }"
+                 class="map-legend-container">
+                <div class="map-legend">
+                    <b class="darker-text">{ t("Map legend") }:</b>
+                    <div each="{ cat, i in categories }"
+                        class="capitalize map-category">
+                        <img src="{ assets[cat] }">
+                        { t(cat) }
+                    </div>
+                </div>
+            </div>
+            <div class="map-attribution">
+                <a target="_blank" href="https://www.openstreetmap.org/copyright/pt-BR">© contribuidores do OpenStreetMap</a>
+                <a target="_blank" href="http://mapbox.com">MB</a>
+                <!--
+                <a target="_blank" href="http://opendatacommons.org/licenses/odbl/">ODbL</a>
+                <a target="_blank" href="http://www.mapquest.com/terms-of-use">MQ</a>
+                -->
+            </div>
+            <div if="{ opts.big }"
+                 class="map-update-time">
+                { t('source') }: <a target="_blank" href="http://orcamento.sf.prefeitura.sp.gov.br/orcamento/execucao.php">Secretaria de Finanças</a>
+                <!-- - { t('data updated at') } { yearinfo['last_update'] }-->
+            </div>
+            <spinner class="back-layer" if="{ !points }" scale="0.5"/>
+        </div>
+    </div>
+
+
+    <script>
+    import map from './map'
+    this.mixin('base')
+    this.yearinfo = ''
+    this.categories = ['planejado', 'empenhado', 'liquidado']
+
+    this.pointsChanged = () => {
+        if (this.points) {
+            map.updateMap(this.points)
+            this.update()
+        }
+    }
+    this.yearinfoChanged = () => {
+        if (!this.yearinfo) this.points = null
+        this.update()
+    }
+
+    this.mapInited = false
+    this.initWhenNeeded = () => {
+        if (!this.mapInited && opts.showmap
+            && document.getElementById('map-container')) {
+            this.mapInited = true
+            map.initMap('map-container')
+            this.watchDepends('points yearinfo', 'year',
+                this.pointsChanged, this.yearinfoChanged)
+        }
+    }
+
+    this.one('mount', () => {
+        this.year = this.router.getParam('year')
+        this.initWhenNeeded()
+    })
+
+    // // Used to get last_update
+    // this.watchDepends('yearinfo', 'year', () => {
+    //     // acme to also load points. Since this watchDepends will update year,
+    //     // points' watchDepends will not run by itself
+    //     riot.control.trigger(riot.VEL('points'), this.year)
+    //     if (this.yearinfo) this.update()
+    // })
+
+    this.on('updated', () => {
+        this.initWhenNeeded()
+        map.redraw()
+    })
+
+    this.locateAddress = () => {
+        map.locateAddress(this['search-address-input'].value)
+    }
+    </script>
+</map>

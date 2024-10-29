@@ -1,0 +1,124 @@
+<dyntable>
+    <!--     <h2>Table com { totalRows } linhas</h2> -->
+    <div class="table-responsive">
+        <table class="table table-hover">
+            <!--             <colgroup>
+            <col style="color: #ff0">
+            </colgroup> -->
+            <tr>
+                <th class="text-left relative">
+                    { t('description') }
+                    <span class="table-header-mark"/>
+                </th>
+                <th>{ t('planejado') }</th>
+                <th>{ t('empenhado') }</th>
+                <th>{ t('liquidado') }</th>
+                <th class="text-left">{ t('body') }</th>
+            </tr>
+            <tr each={ tabledata }
+                class="clickable"
+                onclick="{ fRoute('despesa', objCode(code)) }">
+                <td class="main-cell">{ ds_projeto_atividade }</td>
+                <td class="text-right">
+                    { formatCur(calcPlanejado(sld_orcado_ano, vl_atualizado)) }
+                </td>
+                <td class="text-right">
+                    { formatCur(vl_empenhadoliquido) }
+                </td>
+                <td class="text-right">
+                    { formatCur(vl_liquidado) }
+                </td>
+                <td>{ ds_orgao }</td>
+            </tr>
+        </table>
+    </div>
+    <div class="text-right table-controls">
+        <a onclick="{ fRoute(objPage(0)) }"
+            if="{ page != 0 }">
+            { t('first') }
+        </a>
+        <a each={ num, i in pageIndexes }
+            onclick="{ fRoute(objPage(num)) }"
+            class="{disabled: num == page }"
+            role="button">
+            { num + 1 }
+        </a>
+        <a onclick="{ fRoute(objPage(lastPage)) }"
+            if="{ page != lastPage }">
+            { t('last') }
+        </a>
+    </div>
+
+
+    <script>
+    import stores from '../stores'
+    import {formatCur} from '../utils/helpers'
+    this.formatCur = formatCur
+    this.mixin('base')
+
+    this.year = this.router.getParam('year')
+    this.page = this.router.getParam('page')
+    this.defaultPage = this.router.getDefaultParam('page')
+    this.per_page_num = this.router.getParam('per_page_num')
+    this.totalRows = 0
+
+    // Variables which this table relies on
+    this.dependVars = ['year', 'page']
+    this.dependSignal = this.dependVars.map((x) => riot.SEC(x)).join(' ')
+
+    // Key to be used to index tabledatas
+    this.currKey = () => {
+        return this.dependVars.map((x) => this[x]).join('-')
+    }
+
+    // Helper to route to a page/code. Riot is not liking '{}' inside onclick...
+    this.objPage = (num) => {return {page:num}}
+    this.objCode = (code) => {return {code}}
+
+    this.updateTable = data => {
+        if ((data.key == this.currKey()) &&
+            (this.tabledata != data.value)) {
+            this.tabledata = data.value
+
+            // Calculate last page
+            this.totalRows = stores.tabledata.getTotal()
+            this.lastPage = Math.floor(this.totalRows / this.per_page_num)
+
+            // Page index numbers
+            let numShownPages = 7
+            this.pageIndexes = Array(...Array(numShownPages))
+                .map((_, i) => i + this.page - Math.floor(numShownPages/2))
+                .filter(i => i >= 0 && i <= this.lastPage)
+
+            this.update()
+        }
+    }
+
+    // Watch table data changes
+    this.onControl(riot.SEC('tabledata'), this.updateTable)
+
+    // Watch depends vars
+    this.onControl(this.dependSignal, (signal, value) => {
+        let varName = riot.SECtoVar(signal)
+        if (this[varName] != value) {
+            // Resets page when other var changes
+            if (varName != 'page' && this.page != this.defaultPage) {
+                this.page = this.defaultPage
+                this.triggerChange('page', this.defaultPage)
+            }
+            this[varName] = value
+            riot.control.trigger(riot.VEL('tabledata'), this.currKey())
+        }
+    })
+
+    // Load both vars
+    // The line below seems to request the data without year and page values set
+    // giving an API error. Commenting:
+    // riot.control.trigger(this.dependSignal)
+    riot.control.trigger(riot.VEL('tabledata'), this.currKey())
+
+    this.calcPlanejado = (orcado, atualizado) => {
+        return atualizado ? atualizado : orcado
+    }
+    </script>
+</dyntable>

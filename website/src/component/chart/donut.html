@@ -1,0 +1,22 @@
+<donut>
+    <div class="canvas-wrapper">
+        <canvas id="{canvasId}" class="donut" width="{width}" height="{height}"></canvas>
+        <span class="darker-text canvas-text">{opts.percentage}%</span>
+    </div>
+
+
+    <script>
+    import {drawDonut} from './chart-utils'
+
+    this.width = 200
+    this.height = 200
+    this.canvasId = "canvas" + this.opts.color
+
+    this.on('mount update', () => {
+        let canvas = document.getElementById(this.canvasId)
+        if (canvas)
+            // drawDonut(canvas, '#' + this.opts.color, this.opts.percentage)
+            drawDonut(canvas, this.opts.color, this.opts.percentage)
+    })
+    </script>
+</donut>

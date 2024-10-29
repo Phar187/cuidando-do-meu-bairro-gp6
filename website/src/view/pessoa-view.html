@@ -1,0 +1,318 @@
+<pessoa-view class="container">
+
+    <!-- Error messages -->
+    <p class="text-center error-msg">
+        { t(userError.message) }
+    </p>
+
+    <div class="top-bar relative margin-top">
+        <span class="block-decorator"/>
+        <h1>
+            <spinneror class="dark-spinner" condition="!userinfo" scale="0.25">{ parent.userinfo.username }</spinneror>
+        </h1>
+
+        <!-- Description -->
+        <div if="{ !isEditting.description && userinfo }">
+            <p>
+                { description }
+                <div if="{ checkIsUser() && edittingNone() }">
+                    <a onclick="{ openEdit.bind(this, 'description') }">editar</a>
+                </div>
+            </p>
+        </div>
+
+        <!-- Edit Description -->
+        <form class="form" if="{ isEditting.description }">
+            <div class="form-group">
+                <label class="sr-only"
+                       for="user-edit-description">
+                    { t('Description') }
+                </label>
+                <textarea class="form-control"
+                          rows="3"
+                          id="user-edit-description"
+                          maxlength="500"
+                          value="{ userinfo.description }"
+                          placeholder="{ t('Description') }"/>
+                <div class="control-buttons">
+                    <button type="submit"
+                            onclick="{ sendEdit }"
+                            class="btn btn-color-sec">
+                        { t('Save') }
+                        <span if="{ sendEditUserinfoWaiting }" class="loading"/>
+                    </button>
+                    <button class="btn btn-warning"
+                            onclick="{ closeEdit.bind(this, 'description') }">
+                        { t('Cancel') }
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <div class="top-bar bottom-bar private-info"
+         if="{ checkIsUser() }">
+
+        <p>{ t('private_data') }:</p>
+
+        <!-- Email -->
+        <div if="{ !isEditting.email }">
+            <b>{ t('Email') }:</b> {userinfo.email}
+            <a if="{ edittingNone() }"
+               onclick="{ openEdit.bind(this, 'email') }">{ t('editar') }</a>
+        </div>
+
+        <!-- Edit Email -->
+        <div if="{ isEditting.email }">
+            <div class="form-group form">
+                <label class="sr-only"
+                        for="user-edit-email">
+                    { t('E-mail') }
+                </label>
+                <input type="text"
+                       class="form-control"
+                       id="user-edit-email"
+                       value="{ userinfo.email }"
+                       placeholder="{ t('E-mail') }">
+                <div class="control-buttons">
+                    <button type="submit"
+                            onclick="{ sendEdit }"
+                            class="btn btn-color-sec">
+                        { t('Save') }
+                        <span if="{ sendEditUserinfoWaiting }" class="loading"/>
+                    </button>
+                    <button class="btn btn-color-sec"
+                            onclick="{ closeEdit.bind(this, 'email') }">
+                        { t('Cancel') }
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Password -->
+        <div if="{ !isEditting.password }">
+            <b>{ t('Password') }</b>
+            <a if="{ edittingNone() }"
+               onclick="{ openEdit.bind(this, 'password') }">{ t('editar') }</a>
+        </div>
+
+        <!-- Edit Password -->
+        <div if="{ isEditting.password }">
+            <form class="form pessoa-edit-password-form">
+                <div class="form-group form-inline">
+                    <label class="sr-only"
+                            for="user-edit-curr-password">
+                        { t('Current password') }
+                    </label>
+                    <input type="password"
+                        class="form-control { checkFieldError('password') }"
+                        id="user-edit-curr-password"
+                        placeholder="{ t('Current password') }">
+                </div>
+
+                <div class="form-group form-inline">
+                    <label class="sr-only"
+                            for="user-edit-new-password">
+                        { t('New password') }
+                    </label>
+                    <input type="password"
+                            class="form-control { checkFieldError('new_password') }"
+                            id="user-edit-new-password"
+                            placeholder="{ t('New password') }">
+                </div>
+
+                <div class="form-group form-inline">
+                    <label class="sr-only"
+                            for="user-edit-confirm-password">
+                        { t("Confirm new password") }
+                    </label>
+                    <input type="password"
+                            class="form-control { checkFieldError('confirm-password') }"
+                            id="user-edit-confirm-password"
+                            placeholder="{ t('Confirm new password') }">
+                </div>
+
+                <button type="submit"
+                        onclick="{ sendEdit }"
+                        class="btn btn-color-sec">
+                    { t('Save') }
+                    <span if="{ sendEditUserinfoWaiting }" class="loading"/>
+                </button>
+                <button class="btn btn-warning"
+                        onclick="{ closeEdit.bind(this, 'password') }">
+                    { t('Cancel') }
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Subscriptions -------------------- -->
+    <div if={listUserSubscriptions().length}>
+      <h2>Itens Acompanhados</h2>
+      <li each={el in listUserSubscriptions()}>
+        <a href="{el.template_data.link}">{el.tag}</a>
+
+        <button type="submit"
+                onclick="{ unsubscribe }"
+                class="btn btn-color-sec block-right relative margin-bottom">
+          <spinneror condition="{ waitings[el.tag] && waitings[el.tag]['unsubscribeWaiting'] }" scale="0.15">{ t("Unfollow") }</spinneror>
+        </button>
+      </li>
+    </div>
+
+    <!-- Perguntas -------------------- -->
+    <div if={listUserPedidos().length}>
+      <h2>Perguntas Feitas</h2>
+      <li each={pedido in listUserPedidos()}>
+        <a href="{ getRoute(pedido.keywords[0]) }">
+          {pedido.protocolo} - {pedido.orgao} - {pedido.situacao}
+        </a>
+      </li>
+    </div>
+
+
+    <script>
+    this.mixin('base')
+    this.watches('userError')
+
+    // Set an error message and the incorrect fields
+    this.setError = (msg, fields) => {
+        this.userError = {
+            message: msg,
+            fields: fields
+        }
+    }
+    this.clearError = () => {this.userError = undefined}
+    // Returns the class to mark an input field as incorrect,
+    // if it is realy incorrect
+    this.checkFieldError = (field) => {
+        if (this.userError && this.userError.fields.indexOf(field) != -1)
+            return 'incorrect-field'
+        else return ''
+    }
+
+    // Clear the content of all fields
+    this.clearFields = () => {
+        this['user-edit-description'].value = ''
+        this['user-edit-email'].value = ''
+        this['user-edit-curr-password'].value = ''
+        this['user-edit-confirm-password'].value = ''
+        this['user-edit-new-password'].value = ''
+    }
+
+    this.watches('username', () => {
+        this.clearError()
+        this.clearFields()
+        if (this.username == this.user) {
+            // Force update of data, so can get personal data.
+            riot.control.trigger(riot.VEL('userinfo'), this.user, true)
+        }
+    })
+
+    this.isEditting = {}
+
+    // reset userinfo so loading spinner appears
+    this.watches('user', () => {
+        this.userinfo = null
+        // Hack: without the line below this.user gets updated by this watch
+        // before watchDepends is run, and so watchDepends does nothing thinking
+        // nothing changed.
+        this.user = null
+    })
+
+    this.watchDepends('userinfo', 'user', () => {
+        if (this.userinfo) {
+            this.description = this.userinfo.description
+            if (!this.description)
+                this.description = this.t('No user description...')
+            this.isEditting = {}
+            this.clearFields()
+            this.clearError()
+            this.update()
+        }
+    })
+
+    // Check if no field is beeing edited
+    this.edittingNone = () => {
+        for (let k in this.isEditting) {
+            if (this.isEditting[k]) return false
+        }
+        return true
+    }
+
+    this.openEdit = (field) => {
+        // Populate field value before openning
+        if (field != 'password') {
+            this[`user-edit-${field}`].value = this.userinfo[field]
+        }
+        this.isEditting[field] = true
+    }
+    this.closeEdit = (field) => {this.isEditting[field] = false}
+
+    // Check if is displaying data about current user or not
+    this.checkIsUser = () => {
+        return this.username && this.userinfo && (this.user == this.username)
+    }
+
+    this.sendEdit = () => {
+        let data = {username: this.userinfo.username}
+        if (this.isEditting.email) {
+            data.email = this['user-edit-email'].value
+        } else if (this.isEditting.description) {
+            data.description = this['user-edit-description'].value
+        } else if (this.isEditting.password) {
+            // Trying to change password
+            if(this['user-edit-new-password'].value
+               != this['user-edit-confirm-password'].value) {
+                this.setError('Different passwords',
+                              ['new_password', 'confirm-password'])
+                return false
+            } else {
+                data.password = this['user-edit-curr-password'].value
+                data['new_password'] = this['user-edit-new-password'].value
+            }
+        }
+
+        this.safeTriggerChange('sendEditUserinfo', data)
+    }
+
+
+     // Subscriptions --------------------------
+     this.waitings = {}
+     this.watches('subscriptions')
+     this.listUserSubscriptions = () => {
+       if (this.username == this.user && (this.subscriptions && this.subscriptions.value)) {
+         let subscriptions = []
+         for (let code in this.subscriptions.value) {
+           subscriptions.push(this.subscriptions.value[code])
+         }
+         return subscriptions
+       } else return []
+     }
+
+     this.unsubscribe = event => {
+         var id = event.item.el.tag
+         if (!this.waitings[id]) this.waitings[id] = {}
+         this.safeTriggerChange('unsubscribe', {id}, this.waitings[id])
+     }
+
+     // Pedidos ----------------------------------
+     this.watchDepends('userPedidos', 'user', () => {
+       this.update()
+     })
+     this.listUserPedidos = () => {
+       if (this.userPedidos)
+         return this.userPedidos
+       else
+         return []
+     }
+     // this.getFRoute = (keyword) => {
+     //  return this.fRoute('despesa', {year: keyword.slice(0,4), code: keyword})
+     // }
+     this.getRoute = (keyword) => {
+       // TODO: fazendo o routing na mão!!! Arrumar!
+       return window.location.protocol + '//' + window.location.host + '?/despesa/' + keyword.slice(0,4) + '/' + keyword
+     }
+
+    </script>
+</pessoa-view>
