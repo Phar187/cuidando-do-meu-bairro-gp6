@@ -1,0 +1,82 @@
+.padded-col
+  padding: 20px
+
+.category
+  border-width: 1px
+  border-style: solid none
+  border-color: $neutral-color-light
+  /* height: 240px
+  padding: 10px
+  text-align: center
+  @media (max-width: $screen-xs-max)
+    border-bottom-style: none
+    &:last-child
+      border-bottom-style: solid
+  .value
+    white-space: nowrap
+    padding-top: 10px
+    font-size: 16pt
+
+
+@media (min-width: $screen-sm-min)
+  .category + .category
+    border-left-style: solid
+    &::before
+      content: "➜"
+      left: -0.5em
+      position: absolute
+      font-size: 3em
+      background-color: $light-dark-bg
+      top: 50%
+      transform: translateY(-50%)
+
+
+.not-mapped-msg-container
+  right: 50%
+  position: absolute
+  bottom: 50%
+  pointer-events: none
+
+.not-mapped-msg
+  position: relative
+  z-index: 500
+  text-align: center
+  right: -50%
+  font-size: 14pt
+  background-color: rgba(0, 0, 0, 0.5)
+  padding: 15px
+  color: white
+  border-radius: 5px
+
+
+.key
+  font-weight: bold
+  color: $neutral-color-dark
+
+.orgao-box
+  padding: 15px 0px
+  position: relative
+  .key
+    text-transform: uppercase
+  .value
+    color: $secondary-color
+
+.despesa-details-list
+  padding: 15px 0px
+  /* margin-top: 0px
+
+
+.light-dark-bg
+  background-color: $light-dark-bg
+
+
+.moedas
+  svg
+    height: 100px
+    width: 100px
+  &.planejado
+    fill: $planejado
+  &.empenhado
+    fill: $empenhado
+  &.liquidado
+    fill: $liquidado

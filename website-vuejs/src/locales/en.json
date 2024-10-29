@@ -1,0 +1,19 @@
+{
+  "_lang": "English",
+  "login_form_use_reset_code": "Please check your email for the reset code and use it in the form below. You have {minutes} minutes to use it.",
+  "planejado": "planned",
+  "empenhado": "committed",
+  "liquidado": "finished",
+  "error_decode_token": "Error to decode stored token! Please relogin...",
+  "address_not_found": "Address not found...",
+  "error_renew_token": "Error to renew token",
+  "error_token_json": "Error in token response",
+  "private_data": "This is your private data, displayed only for you",
+  "want_to_question?": "Do you want to make a question for the government about this expense?",
+  "error_get_url_facebook": "Error to get URL for Facebook login",
+  "error_complete_login_facebook": "Error to complete Facebook login",
+  "error_send_question": "Error to send question",
+  "error_multipoint_ajax": "Error to get multiple point info",
+  "error_mapstore_ajax": "Error to get data",
+  "comments_about": "one comment about | {count} comments about"
+}
