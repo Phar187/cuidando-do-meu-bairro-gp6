@@ -1,0 +1,61 @@
+name: CI Workflow for website-vuejs
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out the repository
+        uses: actions/checkout@v2
+
+      # Atualizar pacotes do sistema
+      - name: Update system packages
+        run: sudo apt update && sudo apt upgrade -y
+
+      # Instalar Git
+      - name: Install Git
+        run: sudo apt install git -y
+
+      # Instalar Python 2.7
+      - name: Install Python 2.7
+        run: sudo apt install python2.7 -y
+
+      # Instalar NVM e Node.js versão 14
+      - name: Install NVM
+        run: curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.0/install.sh | bash
+
+      - name: Load NVM
+        run: source ~/.bashrc
+
+      - name: Install Node.js 14 using NVM
+        run: |
+          nvm install 14
+          nvm use 14
+          node -v
+          npm -v
+
+      # Instalar dependências do projeto
+      - name: Install Project Dependencies
+        run: |
+          cd website-vuejs
+          npm install
+          npm install leaflet vue2-leaflet
+
+      # Rodar o projeto ou executar testes
+      - name: Run Tests
+        run: |
+          cd website-vuejs
+          npm run test
+
+      # Opcional: Executar o projeto (se necessário para testes específicos)
+      - name: Run Project (Optional)
+        run: |
+          cd website-vuejs
+          npm run serve
+        if: always()  # Permite rodar independentemente do status anterior
