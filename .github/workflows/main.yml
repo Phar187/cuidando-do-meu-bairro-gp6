@@ -26,14 +26,11 @@ jobs:
         run: sudo apt install python2.7 -y
 
       # Instalar NVM e Node.js versão 14 (para compatibilidade)
-      - name: Install NVM
+      - name: Install NVM and Node.js 14
         run: |
           curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.0/install.sh | bash
-          echo "source ~/.nvm/nvm.sh" >> $GITHUB_ENV  # Adiciona o nvm ao ambiente do GitHub Actions
-
-      - name: Load NVM and Install Node.js 14
-        run: |
-          source ~/.nvm/nvm.sh
+          export NVM_DIR="$HOME/.nvm"
+          . "$NVM_DIR/nvm.sh"
           nvm install 14
           nvm use 14
           node -v
@@ -41,12 +38,16 @@ jobs:
 
       - name: Install Project Dependencies
         run: |
+          export NVM_DIR="$HOME/.nvm"
+          . "$NVM_DIR/nvm.sh"
           cd cuidando-do-meu-bairro-gp6/website-vuejs
           npm install
           npm install leaflet vue2-leaflet
 
       - name: Run Project
         run: |
+          export NVM_DIR="$HOME/.nvm"
+          . "$NVM_DIR/nvm.sh"
           cd cuidando-do-meu-bairro-gp6/website-vuejs
           npm run serve
         if: always()
