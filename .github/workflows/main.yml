@@ -11,44 +11,40 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # Clonar o repositório especificado
       - name: Clone the repository
         run: |
           git clone https://github.com/Phar187/cuidando-do-meu-bairro-gp6.git
           cd cuidando-do-meu-bairro-gp6/website-vuejs
 
-      # Atualizar pacotes do sistema
       - name: Update system packages
         run: sudo apt update && sudo apt upgrade -y
 
-      # Instalar Git
       - name: Install Git
         run: sudo apt install git -y
 
-      # Instalar Python 2.7 (se necessário para o projeto)
       - name: Install Python 2.7
         run: sudo apt install python2.7 -y
 
       # Instalar NVM e Node.js versão 14 (para compatibilidade)
       - name: Install NVM
-        run: curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.0/install.sh | bash
-
-      - name: Load NVM
-        run: source ~/.bashrc
-
-      - name: Install Node.js 14 using NVM
         run: |
+          curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.0/install.sh | bash
+          echo "source ~/.nvm/nvm.sh" >> $GITHUB_ENV  # Adiciona o nvm ao ambiente do GitHub Actions
+
+      - name: Load NVM and Install Node.js 14
+        run: |
+          source ~/.nvm/nvm.sh
           nvm install 14
           nvm use 14
-          
+          node -v
+          npm -v
 
-      # instalar dependências
       - name: Install Project Dependencies
         run: |
+          cd cuidando-do-meu-bairro-gp6/website-vuejs
           npm install
           npm install leaflet vue2-leaflet
 
-      # Executar o projeto
       - name: Run Project
         run: |
           cd cuidando-do-meu-bairro-gp6/website-vuejs
