@@ -40,13 +40,11 @@ jobs:
         run: |
           nvm install 14
           nvm use 14
-          node -v
-          npm -v
+          
 
-      # Entrar na pasta do projeto e instalar dependências
+      # instalar dependências
       - name: Install Project Dependencies
         run: |
-          cd cuidando-do-meu-bairro-gp6/website-vuejs
           npm install
           npm install leaflet vue2-leaflet
 
