@@ -1,4 +1,4 @@
-name: CI Workflow for website-vuejs
+name: Run Project
 
 on:
   push:
@@ -7,12 +7,15 @@ on:
     branches: [main]
 
 jobs:
-  build-and-test:
+  build-and-run:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Check out the repository
-        uses: actions/checkout@v2
+      # Clonar o repositório especificado
+      - name: Clone the repository
+        run: |
+          git clone https://github.com/Phar187/cuidando-do-meu-bairro-gp6.git
+          cd cuidando-do-meu-bairro-gp6/website-vuejs
 
       # Atualizar pacotes do sistema
       - name: Update system packages
@@ -22,11 +25,11 @@ jobs:
       - name: Install Git
         run: sudo apt install git -y
 
-      # Instalar Python 2.7
+      # Instalar Python 2.7 (se necessário para o projeto)
       - name: Install Python 2.7
         run: sudo apt install python2.7 -y
 
-      # Instalar NVM e Node.js versão 14
+      # Instalar NVM e Node.js versão 14 (para compatibilidade)
       - name: Install NVM
         run: curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.0/install.sh | bash
 
@@ -40,22 +43,16 @@ jobs:
           node -v
           npm -v
 
-      # Instalar dependências do projeto
+      # Entrar na pasta do projeto e instalar dependências
       - name: Install Project Dependencies
         run: |
-          cd website-vuejs
+          cd cuidando-do-meu-bairro-gp6/website-vuejs
           npm install
           npm install leaflet vue2-leaflet
 
-      # Rodar o projeto ou executar testes
-      - name: Run Tests
+      # Executar o projeto
+      - name: Run Project
         run: |
-          cd website-vuejs
-          npm run test
-
-      # Opcional: Executar o projeto (se necessário para testes específicos)
-      - name: Run Project (Optional)
-        run: |
-          cd website-vuejs
+          cd cuidando-do-meu-bairro-gp6/website-vuejs
           npm run serve
-        if: always()  # Permite rodar independentemente do status anterior
+        if: always()
