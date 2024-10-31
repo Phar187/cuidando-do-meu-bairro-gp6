@@ -47,4 +47,10 @@ jobs:
         run: |
           cd website-vuejs
           npm run serve
+          sleep 10  # Aguarda alguns segundos para verificar se es está rodando mesmo
+        if: always()
+
+# Finalizar o workflow após iniciar o projeto
+      - name: Stop Workflow
+        run: echo "terminando workflow após rodar o projeto"
         if: always()
