@@ -1,4 +1,4 @@
-name: Run Project
+name: Setup and Run Project
 
 on:
   push:
@@ -11,43 +11,40 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Clone the repository
-        run: |
-          git clone https://github.com/Phar187/cuidando-do-meu-bairro-gp6.git
-          cd cuidando-do-meu-bairro-gp6/website-vuejs
-
+      # Atualizar pacotes do sistema
       - name: Update system packages
         run: sudo apt update && sudo apt upgrade -y
 
+      # Instalar Git
       - name: Install Git
         run: sudo apt install git -y
 
+      # Clonar o repositório
+      - name: Clone the repository
+        run: |
+          git clone https://gitlab.com/cuidandodomeubairro/website-vuejs.git
+          cd website-vuejs
+
+      # Instalar Python 2.7
       - name: Install Python 2.7
         run: sudo apt install python2.7 -y
 
-      # Instalar NVM e Node.js versão 14 (para compatibilidade)
-      - name: Install NVM and Node.js 14
-        run: |
-          curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.0/install.sh | bash
-          export NVM_DIR="$HOME/.nvm"
-          . "$NVM_DIR/nvm.sh"
-          nvm install 14
-          nvm use 14
-          node -v
-          npm -v
+      # Usar Node.js 14 diretamente (sem NVM)
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '14'  # Usa diretamente a versão 14 do Node.js
 
+      # Instalar dependências do projeto
       - name: Install Project Dependencies
         run: |
-          export NVM_DIR="$HOME/.nvm"
-          . "$NVM_DIR/nvm.sh"
-          cd cuidando-do-meu-bairro-gp6/website-vuejs
+          cd website-vuejs
           npm install
           npm install leaflet vue2-leaflet
 
+      # Executar o projeto
       - name: Run Project
         run: |
-          export NVM_DIR="$HOME/.nvm"
-          . "$NVM_DIR/nvm.sh"
-          cd cuidando-do-meu-bairro-gp6/website-vuejs
+          cd website-vuejs
           npm run serve
         if: always()
