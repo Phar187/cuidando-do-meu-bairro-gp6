@@ -55,7 +55,7 @@ Para rodar todos os testes de uma vez, utilize apenas `cucumber`, embora seja re
 
 ### Considerações sobre os Testes
 
-- **Acompanhamento de Gastos por Instituição**: A busca na tabela pode ser lenta dependendo do termo pesquisado. O primeiro cenário usa um termo que está na primeira página da tabela, enquanto o segundo simula uma busca por algo inexistente, exigindo uma verificação completa e lenta da tabela. Recomenda-se rodar este teste (`cucumber features/acompanhamento_gastos.feature`) por último.
+- **Acompanhamento de Gastos por Instituição**: A busca na tabela pode ser lenta dependendo do termo pesquisado. para o cenário 01, usamos um termo aleatório, e como eles não seguem uma ordem de exibição, o tempo de verificação pode variar a cada teste, enquanto o cenário 02 simula uma busca por algo inexistente, exigindo uma verificação completa e lenta da tabela. Recomenda-se rodar este teste (`cucumber features/acompanhamento_gastos.feature`) por último.
 
 ### Funcionalidades Problemáticas
 
