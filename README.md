@@ -67,7 +67,7 @@ Algumas funcionalidades não possuem testes de aceitação completos devido a li
 
 3. **Edição de Perfil**: Há limitações que comprometem a validade dos testes:
    - **Botão de Editar Descrição**: Não funcional, impedindo o teste de edição de descrição.
-   - **Validação de Senha**: O sistema não verifica se a senha antiga está correta antes de permitir a alteração.
+   - **Validação de Senha**: O sistema não avisa se a senha atual está correta ou não, de modo que apesar da senha não ser alterada por preencher a atual erroneamente, não é eexplicitado ao usuário. 
    - **Validação de Email**: Emails inválidos não são rejeitados explicitamente, o sistema simplesmente não altera o email.
 
 ### Considerações sobre os testes de aceitação 
