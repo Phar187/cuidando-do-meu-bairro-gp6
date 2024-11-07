@@ -20,47 +20,60 @@
 
 
 
-##Testes de Aceitação
-Está descreve os testes de aceitação desenvolvidos para as principais funcionalidades do sistema, informações sobre como executar os testes e a organização dos arquivos.
 
-#Estrutura dos Testes
-As funcionalidades foram separadas de acordo com as principais ações esperadas no site. Cada funcionalidade tem um arquivo .feature correspondente dentro da pasta features, organizado da seguinte forma:
 
-Acesso às Informações de Gastos
-Login e Autenticação – Pronto
-Cadastro de Usuários – Pronto
-Edição de Perfil de Usuário
-Atividades Recentes
-Acompanhamento de Gastos por Instituição
-Verificação das Mudanças do Gráfico na Página Análises – Pronto
-Verificação do Funcionamento dos Links na Página Sobre – Pronto
-Acesso à Página do Blog
-Para simplificar a estrutura dos testes, as funcionalidades de login, cadastro e edição de perfil compartilham um único arquivo de steps, pois essas ações são interdependentes. Isso evita redundâncias e facilita a manutenção dos testes.
 
-#Arquivos de Teste
-Os arquivos .feature desenvolvidos estão organizados na pasta features e podem ser executados individualmente. eles podem ser executados da seguinte forma: 
-cucumber features/nome_do_arquivo.feature ou apenas cucumber para rodar todos, mas não recomendo por não ser possível analisá-los com calma. 
+## Testes de Aceitação
 
-#considerações sobre os testes 
-1. Teste- Acompanhamento de Gastos por Instituição:o primeiro caso de teste em si faz uma busca na tabela pelo que foi passado nos cenários, então a depender do que é passado nele, caso esteja próximo ou não do topo, pode demorar, foi deixado uma pesquisa de um termo que está na primeira página. Já o segundo cenário considera uma busca por algo que não existe, então ele verifica toda a tabela, o que demora algum tempo, então recomendo usar o comando de teste dessa funcionalidade "cucumber features/acompanhamento_gastos.feature" por último. 
+Este documento descreve os testes de aceitação para as principais funcionalidades do sistema, incluindo instruções de execução e a organização dos arquivos de teste.
 
-#funcionalidades problematicas
-Algumas funcionalidades não possuem testes de aceitação devido a problemas técnicos ou limitações no próprio sistema:
+### Estrutura dos Testes
 
-1.Busca no Mapa:
-A funcionalidade de busca por bairro no mapa atualmente não está funcionando, impedindo a criação de testes de aceitação para essa área específica do sistema.
-Links Ambíguos na Página Sobre:
+As funcionalidades foram separadas conforme as principais ações do site. Cada funcionalidade possui um arquivo `.feature` correspondente na pasta `features`:
 
-2.Links de paginas
-Nos casos de links para a página do blog e a página de notícias do projeto, a interface do usuário apresenta links ambiguamente nomeados como "aqui", o que dificulta a identificação do destino esperado e impede a execução de testes de aceitação consistentes. Idealmente, esses links deveriam ter nomes descritivos que indiquem claramente o destino.
-Problemas na Edição de Perfil:
+- **Acesso às Informações de Gastos**
+- **Login e Autenticação** 
+- **Cadastro de Usuários** 
+- **Edição de Perfil de Usuário**
+- **Atividades Recentes**
+- **Acompanhamento de Gastos por Instituição**
+- **Verificação de Mudanças no Gráfico da Página Análises** 
+- **Verificação de Links na Página Sobre** 
+- **Acesso à Página do Blog**
 
-3.Edição de perfil
-Algumas limitações impedem testes de aceitação completos para a funcionalidade de edição de perfil:
-Botão de Editar Descrição: Este botão não funciona, impossibilitando testes para editar a descrição do perfil.
-Validação de Senha: Ao editar a senha, o sistema não verifica se a senha antiga está correta, o que permite trocas sem autenticação, afetando a validade dos testes.
-Validação de Email: O sistema não verifica se o novo email é válido antes de salvar a alteração. Se o email não for válido, ele simplesmente não altera, o que impede uma validação eficaz via testes de aceitação.
-Considerações Finais
+Para simplificar a estrutura, as funcionalidades de login, cadastro e edição de perfil compartilham um único arquivo de steps, evitando redundâncias e facilitando a manutenção dos testes.
 
-Os testes de aceitação cobrem as funcionalidades principais que estão atualmente em pleno funcionamento. Problemas de funcionamento, como validação inadequada ou ausência de verificações necessárias, foram mencionados aqui, mas não podem ser testados completamente de forma plena até que as funcionalidades sejam corrigidas. Essas limitações nos testes foram observadas para futuras melhorias no sistema e garantir que, quando corrigidas, as funcionalidades possam ser testadas adequadamente.
+### Execução dos Testes
+
+Os arquivos `.feature` podem ser executados individualmente usando:
+
+```bash
+cucumber features/nome_do_arquivo.feature
+```
+
+Para rodar todos os testes de uma vez, utilize apenas `cucumber`, embora seja recomendado executar cada teste individualmente para análise detalhada.
+
+### Considerações sobre os Testes
+
+- **Acompanhamento de Gastos por Instituição**: A busca na tabela pode ser lenta dependendo do termo pesquisado. O primeiro cenário usa um termo que está na primeira página da tabela, enquanto o segundo simula uma busca por algo inexistente, exigindo uma verificação completa e lenta da tabela. Recomenda-se rodar este teste (`cucumber features/acompanhamento_gastos.feature`) por último.
+
+### Funcionalidades Problemáticas
+
+Algumas funcionalidades não possuem testes de aceitação completos devido a limitações técnicas:
+
+1. **Busca no Mapa**: A busca por bairro no mapa não está funcional, impossibilitando testes de aceitação para essa área.
+
+2. **Links Ambíguos na Página Sobre**: Links apontando para "aqui" são confusos e não indicam claramente o destino, dificultando a execução de testes consistentes. Idealmente, esses links deveriam ser mais descritivos.
+
+3. **Edição de Perfil**: Há limitações que comprometem a validade dos testes:
+   - **Botão de Editar Descrição**: Não funcional, impedindo o teste de edição de descrição.
+   - **Validação de Senha**: O sistema não verifica se a senha antiga está correta antes de permitir a alteração.
+   - **Validação de Email**: Emails inválidos não são rejeitados explicitamente, o sistema simplesmente não altera o email.
+
+### Considerações sobre os testes de aceitação 
+
+Os testes de aceitação cobrem as funcionalidades principais e operacionais do sistema. Problemas de funcionamento ou validações ausentes foram documentados para futuras correções, com o objetivo de garantir testes completos e funcionais quando as melhorias forem implementadas.
+
+--- 
+
 
