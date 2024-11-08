@@ -18,6 +18,8 @@
 
 ## Colaboradores
 **Paulo Rodrigues 13671914** - ajudou na construção dos testes de aceitação de login, registro e blog, resolução das dependências dos testes unitários.
+
+
 **Laís da Silva Moreira 13838482** - ajudou na construção dos testes de aceitação das atividades recentes do site, que englobam o acompanhamento de despesas específicas e seus detalhes
 
 
