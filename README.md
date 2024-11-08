@@ -23,6 +23,9 @@
 **Laís da Silva Moreira 13838482** - ajudou na construção dos testes de aceitação das atividades recentes do site, que englobam o acompanhamento de despesas específicas e seus detalhes
 
 
+**Aline da Costa Santos 11918821** - fez os testes de aceitação sobre a edição de perfil e sobre a visualização do mapa.
+
+
 
 
 
