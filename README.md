@@ -17,6 +17,7 @@
 
 
 ## Colaboradores
+Paulo Rodrigues 13671914- ajudou na construção dos testes de aceitação de login, registro e blog, resolução das dependências dos testes unitários.
 
 
 
