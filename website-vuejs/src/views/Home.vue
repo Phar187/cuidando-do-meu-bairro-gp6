@@ -20,10 +20,16 @@
         <dynamic-table />
         <div class="container mx-auto flex justify-center">
           <a class="px-10 py-5 border-2 hover:bg-secondary-base font-xl text-xs leading-tight uppercase rounded border-secondary-light hover:border-secondary-base bg-secondary-light text-white focus:outline-none focus:ring-0 transition duration-150 ease-in-out"
-          href="http://devcolab.each.usp.br/dadosorcamentarios"
+          :href="linkDownloadTabela()"
           target="_blank">
               <span class="download-arrow"/>
-              {{ $t("Download table") }}
+              {{ $t("Baixar Tabela") }}
+          </a>
+          <a class="px-10 py-5 border-2 hover:bg-transparent font-xl text-xs leading-tight uppercase rounded border-orange-500 hover:border-orange-600 bg-transparent text-black focus:outline-none focus:ring-0 transition duration-150 ease-in-out ml-4"
+          href="https://devcolab.each.usp.br/dadosorcamentarios/"
+          target="_blank">
+              <span class="download-arrow"/>
+              {{ $t("Outras Tabelas") }}
           </a>
         </div>
       </div>
@@ -65,6 +71,11 @@ export default {
   },
   computed: mapState({
     year: state => state.route.params.year
-  })
+  }),
+  methods: {
+    linkDownloadTabela(){
+      return `https://devcolab.each.usp.br/dadosorcamentarios/${this.year}.csv`;
+    }    
+  }
 }
 </script>
