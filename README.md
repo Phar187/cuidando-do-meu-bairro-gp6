@@ -57,7 +57,7 @@ Os arquivos `.feature` podem ser executados individualmente usando:
 cucumber features/nome_do_arquivo.feature
 ```
 
-Para rodar todos os testes de uma vez, utilize apenas `cucumber`, embora seja recomendado executar cada teste individualmente para análise detalhada.
+É recomendado executar cada teste individualmente para análise detalhada, e para evitar erros.
 
 ### Considerações sobre os Testes
 
