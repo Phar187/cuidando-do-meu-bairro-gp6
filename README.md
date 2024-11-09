@@ -9,7 +9,8 @@
 
 
 ## Configuração e Execução
----
+
+
 Configuração do ambiente Ubuntu (Linux) para rodar a interface `website-vuejs`:
 
 
@@ -90,6 +91,7 @@ npm run serve
 
 
 Obs.: Pode ser que aparecça uma mensagem de erro devido ao endpoint de dados estar indisponível (erro 400), especialmente se estiver rodando localmente. Esse alerta pode ser ignorado clicando no "X"
+
 
 
 ## Testes de unidade 
