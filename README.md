@@ -26,6 +26,9 @@
 **Bruno Arnone Franchi 13748040** - ajudou na construção dos testes de aceitação de todos os links presentes na página sobre, e de todas as funcionalidades e do gráfico presentes na página análises.
 
 
+**Aline da Costa Santos 11918821** - ajudou na construção dos testes de aceitação sobre a edição de perfil, que inclui edição da senha, email e descrição, e também ajudou com os testes sobre a visualização do mapa.
+
+
 ## Testes de Aceitação
 
 Este documento descreve os testes de aceitação para as principais funcionalidades do sistema, incluindo instruções de execução e a organização dos arquivos de teste.
