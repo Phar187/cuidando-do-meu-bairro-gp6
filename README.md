@@ -9,7 +9,87 @@
 
 
 ## Configuração e Execução
+---
+Configuração do ambiente Ubuntu (Linux) para rodar a interface `website-vuejs`:
 
+
+### 1. Clonar o repositório
+
+
+- Abra o terminal `(Ctrl + Alt + T)`
+- Clone este repositório:
+
+```bash
+git clone https://github.com/Phar187/cuidando-do-meu-bairro-gp6.git
+```
+
+
+### 2. Instalar o Python 2.7
+
+
+- Instale esta versão do python:
+
+```bash
+sudo apt install python2.7 -y
+```
+
+
+### 3. Instalar Node.js (versão 14) usando NVM
+
+
+- Para gerenciar diferentes versões do Node.js, é recomendado usar o gerenciador NVM
+- Primeiro, instale o `nvm`:
+
+```bash
+curl -o- <https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.0/install.sh> | bash
+```
+
+- Carregue o `nvm` no terminal:
+
+```bash
+source ~/.bashrc
+```
+
+- Instale a versão 14 do Node.js:
+
+```bash
+nvm install 14
+nvm use 14
+```
+
+
+### 4. Instalando as dependências do projeto
+
+
+- Entre no diretório do projeto clonado:
+
+```bash
+cd website-vuejs
+```
+
+- Instale todas as dependências do projeto:
+
+```bash
+npm install
+```
+
+- Instale pacotes adicionais necessários para o projeto:
+
+```bash
+npm install leaflet vue2-leaflet
+```
+
+### 5. Executar o projeto
+
+
+- Para inicar o projeto, execute:
+
+```bash
+npm run serve
+```
+
+
+Obs.: Pode ser que aparecça uma mensagem de erro devido ao endpoint de dados estar indisponível (erro 400), especialmente se estiver rodando localmente. Esse alerta pode ser ignorado clicando no "X"
 
 
 ## Testes de unidade 
