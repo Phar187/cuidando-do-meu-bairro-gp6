@@ -17,11 +17,18 @@
 
 
 ## Colaboradores
+**Paulo Rodrigues 13671914** - ajudou na construção dos testes de aceitação de login, registro e blog, resolução das dependências dos testes unitários.
 
 
+**Laís da Silva Moreira 13838482** - ajudou na construção dos testes de aceitação das atividades recentes do site, que englobam o acompanhamento de despesas específicas e seus detalhes.
 
 
+**Bruno Arnone Franchi 13748040** - ajudou na construção dos testes de aceitação de todos os links presentes na página sobre, e de todas as funcionalidades e do gráfico presentes na página análises.
 
+
+**Aline da Costa Santos 11918821** - fez os testes de aceitação sobre a edição de perfil, que inclui edição da senha, email e descrição, e também os testes sobre a visualização do mapa.
+
+**Marcos Vinicius Silva de Souza 13695132** - implementou o teste de aceitação “Visualização e Acompanhamento de Gastos por Instituição” e criou 3 novas funcionalidades para o website-vuejs, as quais estão descritas com detalhes mais abaixo.
 
 ## Testes de Aceitação
 
@@ -51,7 +58,7 @@ Os arquivos `.feature` podem ser executados individualmente usando:
 cucumber features/nome_do_arquivo.feature
 ```
 
-Para rodar todos os testes de uma vez, utilize apenas `cucumber`, embora seja recomendado executar cada teste individualmente para análise detalhada.
+É recomendado executar cada teste individualmente para análise detalhada, e para evitar erros.
 
 ### Considerações sobre os Testes
 
@@ -73,6 +80,13 @@ Algumas funcionalidades não possuem testes de aceitação completos devido a li
 ### Considerações sobre os testes de aceitação 
 
 Os testes de aceitação cobrem as funcionalidades principais e operacionais do sistema. Problemas de funcionamento ou validações ausentes foram documentados para futuras correções, com o objetivo de garantir testes completos e funcionais quando as melhorias forem implementadas.
+
+### Novas funcionalidades implementadas
+
+Foram adicionadas 3 novas funcionalidades:
+   1- Alteração do arquivo "router.js" (website-vuejs/src/router.js) para redirecionar o usuário para o ano atual caso a URL não esteja especificando (antes 2022 era o padrão).
+   2- Alteração do arquivo "Home.vue" (website-vuejs/src/views/Home.vue). O botão "BAIXAR TABELA" agora baixa diretamente a tabela do ano correspondente presente na URL, ao invés de redirecionar o usuário à página de downloads das tabelas.
+   3- Novamente, alteração do arquivo "Home.vue" (website-vuejs/src/views/Home.vue). Foi adicionado outro botão chamado "OUTRAS TABELAS" logo ao lado do botão "BAIXAR TABELA" que herda o comportamento antigo de redirecionar o usuário para a página de downloads da tabela de gastos.
 
 --- 
 

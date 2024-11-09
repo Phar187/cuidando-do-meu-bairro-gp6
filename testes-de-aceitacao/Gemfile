@@ -1,0 +1,15 @@
+source 'https://rubygems.org'
+
+gem 'cucumber'              # Framework para escrita de testes de aceitação
+gem 'capybara'              # Biblioteca para automação de navegadores
+gem 'selenium-webdriver'    # Driver para rodar testes em navegadores reais
+gem 'rspec'                 # (Opcional) Biblioteca de testes unitários
+gem 'webdrivers'            # Automatiza o download e atualização de drivers para os navegadores (como Chrome)
+
+
+
+
+
+
+
+

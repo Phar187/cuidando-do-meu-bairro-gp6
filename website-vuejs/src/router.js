@@ -6,14 +6,14 @@ import Despesa from './views/Despesa.vue'
 import Pessoa from './views/Pessoa.vue'
 
 Vue.use(Router)
-
+let anoAtual = new Date().getFullYear(); //ADICIONADO pega o ano atual para usar de ano padrão (ao invés de 2022) 
 let router = new Router({
   mode: 'history',
   base: process.env.BASE_URL,
   routes: [
     {
       path: '/',
-      redirect: `/2022/1`
+      redirect: `/${anoAtual}/1`//MODIFICADO usa o ano atual previamente setado na variável anoAtual caso a URL não especifique o ano
     },
     {
       path: '/despesa/:year/:code',
