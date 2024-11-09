@@ -20,10 +20,10 @@
 **Paulo Rodrigues 13671914** - ajudou na construção dos testes de aceitação de login, registro e blog, resolução das dependências dos testes unitários.
 
 
-**Laís da Silva Moreira 13838482** - ajudou na construção dos testes de aceitação das atividades recentes do site, que englobam o acompanhamento de despesas específicas e seus detalhes
+**Laís da Silva Moreira 13838482** - ajudou na construção dos testes de aceitação das atividades recentes do site, que englobam o acompanhamento de despesas específicas e seus detalhes.
 
 
-
+**Bruno Arnone Franchi 13748040** - ajudou na construção dos testes de aceitação de todos os links presentes na página sobre, e de todas as funcionalidades e do gráfico presentes na página análises.
 
 
 ## Testes de Aceitação
