@@ -108,7 +108,6 @@ Obs.: Pode ser que aparecça uma mensagem de erro devido ao endpoint de dados es
 
 **Bruno Arnone Franchi 13748040** - ajudou na construção dos testes de aceitação de todos os links presentes na página sobre, e de todas as funcionalidades e do gráfico presentes na página análises.
 
-
 **Aline da Costa Santos 11918821** - fez os testes de aceitação sobre a edição de perfil, que inclui edição da senha, email e descrição, e também os testes sobre a visualização do mapa.
 
 **Marcos Vinicius Silva de Souza 13695132** - implementou o teste de aceitação “Visualização e Acompanhamento de Gastos por Instituição” e criou 3 novas funcionalidades para o website-vuejs, as quais estão descritas com detalhes mais abaixo.
@@ -173,4 +172,27 @@ Foram adicionadas 3 novas funcionalidades:
 
 --- 
 
+### Testes de unidade
+
+- Na pasta website-vuejs rode os seguintes códigos:
+
+```bash
+npm install --save-dev jest
+npm install --save-dev @vue/test-utils@1
+npm install --save-dev vue-jest
+npm install --save-dev vue-template-compiler
+npm install --save-dev babel-jest @babel/core @babel/preset-env babel-core@^7.0.0-bridge.0
+npm install --save-dev jest-environment-jsdom
+npm install --save-dev @babel/core babel-jest
+```
+
+- Após isso rode os testes:
+```bash
+  npm run test
+```
+
+- O arquivo MsgShower.test.js testa o arquivo MsgShower.vue
+- Diretório do MsgShower.vue: src/components/MsgShower.vue
+- Diretório do MsgShower.test.js: /testes_unitarios/MsgShower.test.js
+- Há 4 testes: o de renderização da mensagem, remoção da mensagem ao clicar no botão fechar, renderização de múltiplas mensagens e de não exibir nada se não tiver mensagem.
 
