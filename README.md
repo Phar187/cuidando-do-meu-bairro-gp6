@@ -26,7 +26,7 @@
 **Bruno Arnone Franchi 13748040** - ajudou na construção dos testes de aceitação de todos os links presentes na página sobre, e de todas as funcionalidades e do gráfico presentes na página análises.
 
 
-**Aline da Costa Santos 11918821** - fez os testes de aceitação sobre a edição de perfil, que inclui edição da senha, email e descrição, e também ajudou com os testes sobre a visualização do mapa.
+**Aline da Costa Santos 11918821** - fez os testes de aceitação sobre a edição de perfil, que inclui edição da senha, email e descrição, e também os testes sobre a visualização do mapa.
 
 **Marcos Vinicius Silva de Souza 13695132** - implementou o teste de aceitação “Visualização e Acompanhamento de Gastos por Instituição” e criou 3 novas funcionalidades para o website-vuejs, as quais estão descritas com detalhes mais abaixo.
 
