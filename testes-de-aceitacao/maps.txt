@@ -1,0 +1,43 @@
+
+Given('I am on the homepage') do
+    visit('/')  # Navega para a homepage
+  end
+ 
+  
+  When('I click on the cluster {string}') do |region|
+    page.find(:xpath, "//div[contains(@class, 'marker-cluster') and div/span[text()='21']]").click
+  end
+  
+
+  When('I click the zoom in button') do
+    page.find(:xpath, "//a[contains(@class, 'leaflet-control-zoom-in') and @title='Zoom in']").click
+  end
+  
+  When('I click on the "planejado" location marker') do
+    # Usando o atributo src da imagem para localizar o marcador
+    page.find(:xpath, "//img[contains(@src, 'planejado.80b38890.svg') and @class='leaflet-marker-icon leaflet-zoom-animated leaflet-interactive']").click
+  end
+  
+  Then('I should be zoomed into the location of that work') do
+    expect(page).to have_xpath("//div[contains(@class, 'leaflet-marker-icon')]", visible: true)
+  end
+  
+Feature: Explorar obras no mapa por região
+
+  Background:
+   
+    
+
+  # Cenário 01: Selecionar obras de Pinheiros via cluster
+  Scenario: Selecionar obras de Pinheiros via cluster
+    When I click on the cluster "Pinheiros"
+    Then I should see a list of works in the region
+    When I click on the "planejado" location marker
+    Then I should be zoomed into the location of that work
+
+  # Cenário 02: Selecionar obras de Pinheiros via zoom manual
+  #Scenario: Selecionar obras de Pinheiros via zoom manual
+    #When I click the zoom in button
+    #Then I should see a more detailed view of the region
+    #When I click on the "planejado" location marker
+    #Then I should be zoomed into the location of that work

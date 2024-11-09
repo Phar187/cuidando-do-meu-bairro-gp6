@@ -1,0 +1,15 @@
+mapa- começa em 2022- não deveria ser assim 
+problema da busca e da pesquisa de ano automática-- talvez pensar em um design mais intuitivo 
+editar perfil 
+
+pergunta de arquitetura 
+base de dados de extração orçamentaria-- disso vai para o extrator de dados, robô tenta achar elementos de localização na base de dados 
+tabela é basicamente inútil, não tem ferramenta de filtragem ou busca, seria um segundo foco, para pessoas que gostariam de fazer analise encima dos dados--- um método de comparação dos dados em si do quanto cada bairro recebe. 
+
+o que ajuda é a base de dados nda regionalização da execução orçamentaria 
+
+
+lei orçamentaria- avançou surgiu um campo chamado detalhamento da ação DA-- surgiu com a função do funcionário público detalhar para onde ele iria, no planejamento já teria que informar o destino do dinheiro 
+ela quer de prioridade melhorar o mapa e em segundo lugar melhorar uso de dados com bases novas e velhas de lugares/geolocalização, por terceiro ela gostaria de melhorar a tabela
+a parte de atualização de tabelas seria inutil
+
