@@ -104,6 +104,7 @@ Obs.: Pode ser que aparecça uma mensagem de erro devido ao endpoint de dados es
 
 **Laís da Silva Moreira 13838482** - ajudou na construção dos testes de aceitação das atividades recentes do site, que englobam o acompanhamento de despesas específicas e seus detalhes.
 
+**Samuel Barbosa Azevedo** - implementou os testes de unidade, pesquisou como configurar os ambientes para rodar as ferramentas e participou ativamente no desenvovimento das ideias para os testes.
 
 **Bruno Arnone Franchi 13748040** - ajudou na construção dos testes de aceitação de todos os links presentes na página sobre, e de todas as funcionalidades e do gráfico presentes na página análises.
 
